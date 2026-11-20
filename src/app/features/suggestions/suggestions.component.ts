@@ -89,8 +89,6 @@ export class SuggestionsComponent implements OnInit {
 
         this.suggestions = merged;
         this.currentPage = page;
-
-        // يفضل شغال طالما فيه ناس جديدة راجعة، ويوقف بس لو السيرفر خلّص اللي عنده
         if (rawSuggestions.length === 0 || (isLoadMore && addedCount === 0)) {
           this.hasMore = false;
         } else {

@@ -146,7 +146,6 @@ export class CommentsService {
     try {
       localStorage.setItem(this.likedStorageKey, JSON.stringify(records));
     } catch {
-      // ignore storage quota errors
     }
   }
 }

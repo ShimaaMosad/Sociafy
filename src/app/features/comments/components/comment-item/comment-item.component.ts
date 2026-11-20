@@ -39,15 +39,11 @@ export class CommentItemComponent implements OnInit {
   currentUser: any = null;
   currentUserId = '';
   isMyComment = false;
-
-  // Edit states for main comment (text + image)
   isEditingComment = false;
   editCommentContent = '';
   editCommentImageFile: File | null = null;
   editCommentImagePreview: string | null = null;
   isSavingComment = false;
-
-  // Edit states for replies (text + image)
   editingReplyId: string | null = null;
   editReplyContent = '';
   editReplyImageFile: File | null = null;
@@ -103,7 +99,6 @@ export class CommentItemComponent implements OnInit {
         if (found?._id || found?.id) return found;
       }
     } catch {
-      // ignore parse errors
     }
 
     return null;

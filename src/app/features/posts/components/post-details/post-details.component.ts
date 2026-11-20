@@ -37,21 +37,15 @@ export class PostDetailsComponent implements OnInit {
   repliesMap: Record<string, any[]> = {};
   expandedReplies: Record<string, boolean> = {};
   loadingReplies: Record<string, boolean> = {};
-
-  // New comment state (text + image)
   newCommentText = '';
   newCommentImageFile: File | null = null;
   newCommentImagePreview: string | null = null;
   submittingComment = false;
-
-  // Reply box & input state per comment/reply
   openReplyBoxMap: Record<string, boolean> = {};
   replyTextMap: Record<string, string> = {};
   replyImageFileMap: Record<string, File | null> = {};
   replyImagePreviewMap: Record<string, string | null> = {};
   submittingReplyId: string | null = null;
-
-  // Edit comment/reply state
   editingItemId: string | null = null;
   editingParentCommentId: string | null = null;
   editItemText = '';

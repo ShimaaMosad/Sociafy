@@ -31,14 +31,10 @@ export class ProfileComponent implements OnInit {
   isLoading = true;
 
   private sharedFollowingIds: Set<string> = new Set<string>();
-
-  // مودال تعديل الصورة بالكاميرا
   showPhotoModal = false;
   isUploadingPhoto = false;
   selectedFile: File | null = null;
   imagePreviewUrl: string | null = null;
-
-  // مودال Followers / Following + البحث الفوري
   showFollowModal = false;
   modalTitle = '';
   modalUsersList: any[] = [];
@@ -146,8 +142,6 @@ export class ProfileComponent implements OnInit {
           this.cdr.detectChanges();
           return;
         }
-
-        // احتياطي لو /users/:userId/posts رجع فاضي
         this.postsService.GetAllPosts().subscribe({
           next: (allRes: any) => {
             const allPosts: PostItem[] = allRes?.data?.posts || [];

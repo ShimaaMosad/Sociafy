@@ -66,9 +66,7 @@ export class CommentFormComponent {
         const found = parsed?.data?.user || parsed?.user || parsed;
         if (found?._id || found?.id) return found;
       }
-    } catch {
-      // ignore parse errors
-    }
+    } catch {}
 
     return {};
   }

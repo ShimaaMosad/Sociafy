@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PostCardComponent } from '../../../home/components/post-card/post-card.component'; // عدلي المسار للـ PostCard
+import { PostCardComponent } from '../../../home/components/post-card/post-card.component'; // Ø¹Ø¯Ù„ÙŠ Ø§Ù„Ù…Ø³Ø§Ø± Ù„Ù„Ù€ PostCard
 import { UsersService } from '../../../users/services/users.service';
 
 @Component({
@@ -24,7 +24,6 @@ export class BookmarksComponent implements OnInit {
     this.isLoading = true;
     this.usersService.getBookmarks().subscribe({
       next: (res: any) => {
-        // مطابقة لـ BookmarksResponse حيث الداتا موجودة في data.bookmarks
         this.bookmarks = res.data?.bookmarks || [];
         this.isLoading = false;
       },
@@ -34,8 +33,6 @@ export class BookmarksComponent implements OnInit {
       },
     });
   }
-
-  // دالة لحذف البوست من اللستة محلياً لو تم إلغاء حفطه أو حذفه
   removePostFromList(postId: string) {
     this.bookmarks = this.bookmarks.filter((post) => (post._id || post.id) !== postId);
   }

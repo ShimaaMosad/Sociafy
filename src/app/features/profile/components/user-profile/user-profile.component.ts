@@ -37,8 +37,6 @@ export class UserProfileComponent implements OnInit {
   isOwnProfile = false;
   isFollowing = false;
   isLoading = true;
-
-  // مودال Followers / Following + البحث الفوري
   showFollowModal = false;
   modalTitle = '';
   modalUsersList: any[] = [];

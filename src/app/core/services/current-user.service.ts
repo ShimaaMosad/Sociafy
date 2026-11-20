@@ -13,7 +13,6 @@ export class CurrentUserService {
     try {
       localStorage.setItem(this.USER_KEY, JSON.stringify(user));
     } catch {
-      // ignore storage errors
     }
   }
 
@@ -27,7 +26,6 @@ export class CurrentUserService {
         return this.currentUser;
       }
     } catch {
-      // ignore parse errors
     }
 
     return null;
@@ -39,7 +37,6 @@ export class CurrentUserService {
       localStorage.removeItem(this.USER_KEY);
       sessionStorage.removeItem(this.USER_KEY);
     } catch {
-      // ignore storage errors
     }
   }
 }

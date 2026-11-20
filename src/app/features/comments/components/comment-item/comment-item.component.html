@@ -1,5 +1,5 @@
 <div class="space-y-2.5 pb-3">
-    <!-- Main Comment -->
+    
     <div class="flex items-start gap-3">
         <img [src]="commentData.commentCreator.photo || '/assets/sociafy-default-profile-avatar.png'"
             class="w-8 h-8 rounded-full object-cover mt-0.5 shrink-0 border border-border"
@@ -61,7 +61,7 @@
         </div>
     </div>
 
-    <!-- Comment Actions -->
+    
     <div class="flex items-center gap-4 pl-11 text-[11px] font-semibold text-muted">
         <button type="button" (click)="toggleLike()" class="hover:text-primary transition-colors cursor-pointer"
             [class.text-primary]="isLiked">
@@ -93,7 +93,7 @@
         }
     </div>
 
-    <!-- Reply Form Box -->
+    
     @if (showReplyForm) {
     <div class="pl-11 pt-1.5 pb-1.5">
         <app-comment-form [postId]="postId" [parentCommentId]="commentData._id || commentData.id" [isReply]="true"
@@ -102,7 +102,7 @@
     </div>
     }
 
-    <!-- Nested Replies List -->
+    
     @if (showReplies && replies.length > 0) {
     <div class="pl-10 space-y-4 border-l-2 border-border/60 ml-4 mt-2.5 mb-2">
         @for (reply of replies; track reply._id || reply.id) {
@@ -168,7 +168,7 @@
                 </div>
             </div>
 
-            <!-- Reply Actions (Like, Reply, Edit & Delete) -->
+            
             <div class="flex items-center gap-4 pl-9 text-[11px] font-semibold text-muted">
                 <button type="button" (click)="toggleReplyLike(reply)"
                     class="hover:text-primary transition-colors cursor-pointer" [class.text-primary]="reply.isLiked">

@@ -18,9 +18,6 @@ export class NotificationsComponent implements OnInit {
   notifications: any[] = [];
   isLoading = true;
   isMarkingAll = false;
-
-  // true: الإشعار يختفي فوراً بعد ما يبقى Read مع نقصان العدد
-  // false: يفضل ظاهر وعليه بادج "Read" والعدد بيقل
   hideReadNotifications = true;
 
   ngOnInit(): void {

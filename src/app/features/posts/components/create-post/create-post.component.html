@@ -1,6 +1,6 @@
 <div class="max-w-2xl mx-auto space-y-6">
 
-    <!-- Header -->
+    
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-3xl font-extrabold text-text tracking-tight">Create post</h1>
@@ -12,11 +12,11 @@
         </a>
     </div>
 
-    <!-- Create Post Card Form -->
+    
     <form [formGroup]="postForm" (ngSubmit)="onSubmit()"
         class="bg-white p-6 sm:p-8 rounded-3xl border border-border space-y-6 shadow-2xs">
 
-        <!-- User Info -->
+        
         <div class="flex items-center gap-3">
             <img [src]="currentUser?.photo || '/assets/sociafy-default-profile-avatar.png'"
                 class="w-12 h-12 rounded-full object-cover shrink-0 border border-border" alt="User avatar" />
@@ -29,14 +29,14 @@
             </div>
         </div>
 
-        <!-- Textarea Input -->
+        
         <div class="space-y-2">
             <textarea rows="5" formControlName="body"
                 [placeholder]="'What\'s on your mind, ' + (currentUser?.name || 'User') + '?'"
                 class="w-full bg-surface border border-border rounded-2xl p-4 text-sm text-text placeholder:text-muted focus:outline-none focus:border-primary transition-colors resize-none"></textarea>
         </div>
 
-        <!-- Media Upload Box Preview / File Picker -->
+        
         <label
             class="border-2 border-dashed border-border rounded-2xl p-6 text-center bg-surface hover:border-primary/50 transition-colors cursor-pointer group block">
             <input type="file" (change)="onFileSelected($event)" class="hidden" accept="image/*" />
@@ -64,7 +64,7 @@
         </div>
         }
 
-        <!-- Submit Button -->
+        
         <button type="submit" [disabled]="postForm.invalid || isSubmitting"
             class="w-full py-3.5 px-4 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-semibold text-sm rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer">
             @if (isSubmitting) {

@@ -1,5 +1,5 @@
 <div class="max-w-2xl mx-auto space-y-5 py-4">
-    <!-- Back Link -->
+    
     <div>
         <button type="button" (click)="goBack()"
             class="inline-flex items-center gap-2 text-xs font-bold text-muted hover:text-primary transition-colors cursor-pointer">
@@ -16,18 +16,18 @@
         Post not found.
     </div>
     } @else {
-    <!-- Post Card -->
+    
     <app-post-card [postData]="post" [hideViewDetails]="true" [hideComments]="true"
         (postDeleted)="onPostDeleted()"></app-post-card>
 
-    <!-- Comments Section -->
+    
     <div class="bg-white rounded-3xl border border-border p-5 space-y-5 shadow-2xs">
         <div class="flex items-center justify-between">
             <h2 class="text-sm font-extrabold text-text">Comments</h2>
             <span class="text-xs text-muted font-medium">{{ totalCommentsAndRepliesCount }}</span>
         </div>
 
-        <!-- New Comment Input (Text + Image) -->
+        
         <div class="space-y-2">
             <div class="flex items-center gap-2.5">
                 <label
@@ -63,7 +63,7 @@
             }
         </div>
 
-        <!-- Comments List -->
+        
         @if (isLoadingComments) {
         <p class="text-xs text-muted py-4 text-center">Loading comments...</p>
         } @else {
@@ -152,7 +152,7 @@
                     }
                 </div>
 
-                <!-- Comment Actions -->
+                
                 <div class="flex items-center gap-4 pl-10 text-[11px] font-semibold text-muted">
                     <button type="button" (click)="onToggleItemLike(comment)"
                         [class.text-primary]="isItemLiked(comment)"
@@ -168,7 +168,7 @@
                     </button>
                 </div>
 
-                <!-- Replies Box -->
+                
                 @if (expandedReplies[cid]) {
                 <div class="pl-8 pt-2 space-y-2.5 border-l border-border/80 ml-3">
                     @if (loadingReplies[cid]) {
@@ -252,7 +252,7 @@
                         }
                         }
 
-                        <!-- Reply Actions (Like + Reply on reply) -->
+                        
                         <div class="flex items-center gap-4 text-[11px] font-semibold text-muted pt-0.5">
                             <button type="button" (click)="onToggleItemLike(reply)"
                                 [class.text-primary]="isItemLiked(reply)"
@@ -268,7 +268,7 @@
                             </button>
                         </div>
 
-                        <!-- Reply Input for this specific reply (Text + Image) -->
+                        
                         @if (openReplyBoxMap[rid]) {
                         <div class="space-y-1.5 pt-1.5 border-t border-border/50">
                             <div class="flex items-center gap-2">
@@ -307,7 +307,7 @@
                     }
                     }
 
-                    <!-- Add Reply to Comment (Text + Image) -->
+                    
                     <div class="space-y-1.5 pt-1">
                         <div class="flex items-center gap-2">
                             <label

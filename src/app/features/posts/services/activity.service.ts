@@ -71,7 +71,6 @@ export class ActivityService {
           parsed?.data?._id;
         if (foundId) return String(foundId);
       } catch {
-        // ignore storage parse errors
       }
     }
     return '';
@@ -139,7 +138,7 @@ export class ActivityService {
   }
 
   /**
-   * ينادى فوراً عند عمل Like أو Unlike على بوست من أي مكان (مثل Home)
+   * ÙŠÙ†Ø§Ø¯Ù‰ ÙÙˆØ±Ø§Ù‹ Ø¹Ù†Ø¯ Ø¹Ù…Ù„ Like Ø£Ùˆ Unlike Ø¹Ù„Ù‰ Ø¨ÙˆØ³Øª Ù…Ù† Ø£ÙŠ Ù…ÙƒØ§Ù† (Ù…Ø«Ù„ Home)
    */
   recordPostLike(postId: string, isLiked: boolean, post: PostItem | null = null): void {
     if (!postId) return;
@@ -150,7 +149,7 @@ export class ActivityService {
   }
 
   /**
-   * ينادى فوراً عند إضافة كومنت جديد على بوست
+   * ÙŠÙ†Ø§Ø¯Ù‰ ÙÙˆØ±Ø§Ù‹ Ø¹Ù†Ø¯ Ø¥Ø¶Ø§ÙØ© ÙƒÙˆÙ…Ù†Øª Ø¬Ø¯ÙŠØ¯ Ø¹Ù„Ù‰ Ø¨ÙˆØ³Øª
    */
   recordCommentCreated(postId: string, post: PostItem | null = null): void {
     if (!postId) return;
@@ -161,7 +160,7 @@ export class ActivityService {
   }
 
   /**
-   * ينادى فوراً عند عمل Like أو Unlike على كومنت
+   * ÙŠÙ†Ø§Ø¯Ù‰ ÙÙˆØ±Ø§Ù‹ Ø¹Ù†Ø¯ Ø¹Ù…Ù„ Like Ø£Ùˆ Unlike Ø¹Ù„Ù‰ ÙƒÙˆÙ…Ù†Øª
    */
   recordCommentLike(
     postId: string,
@@ -238,7 +237,6 @@ export class ActivityService {
         }
       }
     } catch {
-      // ignore storage errors
     }
 
     this.likedCommentIdSet = commentIds;
@@ -459,8 +457,6 @@ export class ActivityService {
             ),
           );
         }
-
-        // دمج أي تغييرات لحظية أحدث من الـ API
         const existingById = new Map(this.entriesSubject.value.map((e) => [e.postId, e]));
         for (const entry of builtEntries) {
           const prev = existingById.get(entry.postId);

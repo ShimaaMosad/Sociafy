@@ -37,8 +37,6 @@ export class ExploreComponent implements OnInit {
       this.posts = [];
     }
     this.errorMessage = '';
-
-    // جلب كل بوستات المنصة مع دعم الباجينيشن (صفحات وليميت 10)
     this.postsService.GetAllPosts(this.currentPage, 10).subscribe({
       next: (response) => {
         const fetchedPosts = response.data?.posts || [];

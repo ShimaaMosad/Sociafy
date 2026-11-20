@@ -1,7 +1,7 @@
 <header
     class="sticky top-0 z-50 h-[72px] bg-white border-b border-border px-4 sm:px-8 lg:px-12 flex items-center justify-between gap-4">
 
-    <!-- Logo -->
+    
     <div class="flex items-center gap-5 lg:gap-7 h-full">
         <a routerLink="/home" class="flex items-center shrink-0 group cursor-pointer">
             <img src="assets/logo.png" alt="Sociafy - Your infinite circle"
@@ -9,20 +9,20 @@
         </a>
     </div>
 
-    <!-- Right Actions -->
+    
     <div class="flex items-center gap-2 sm:gap-3.5 shrink-0">
 
         <span class="hidden xl:inline text-xs text-muted">
             A place for your people.
         </span>
 
-        <!-- Search Icon Button -->
+        
         <a routerLink="/search" aria-label="Search" title="Search"
             class="w-9 h-9 rounded-full bg-surface hover:bg-primary/10 border border-border/70 flex items-center justify-center text-muted hover:text-primary transition-colors cursor-pointer">
             <i class="fa-solid fa-magnifying-glass text-sm"></i>
         </a>
 
-        <!-- Notifications -->
+        
         <a routerLink="/notifications"
             class="relative w-9 h-9 rounded-full hover:bg-surface flex items-center justify-center text-muted hover:text-primary transition-colors cursor-pointer">
 
@@ -36,7 +36,7 @@
             }
         </a>
 
-        <!-- Current User -->
+        
         <a routerLink="/profile" class="flex items-center gap-2 pl-3 border-l border-border">
 
             <img [src]="currentUser?.photo || '/assets/sociafy-default-profile-avatar.png'"

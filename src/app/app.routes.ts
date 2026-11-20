@@ -9,7 +9,6 @@ export const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full',
   },
-  // 1. مسارات الـ Auth (للـ Guests فقط - لو مسجل دخول يحوله guestGuard للـ home)
   {
     path: '',
     canActivate: [guestGuard],
@@ -48,23 +47,17 @@ export const routes: Routes = [
       },
     ],
   },
-
-  // 2. مسارات التطبيق الرئيسية (تحتاج Auth Guard وتعمل داخل MainLayoutComponent)
   {
     path: '',
     canActivate: [authGuard],
     component: MainLayoutComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-
-      // Home Feed
       {
         path: 'home',
         title: 'Sociafy | Home',
         loadComponent: () => import('./features/home/home.component').then((m) => m.HomeComponent),
       },
-
-      // Posts & Feeds
       {
         path: 'create-post',
         title: 'Sociafy | Create Post',
@@ -113,8 +106,6 @@ export const routes: Routes = [
             (m) => m.SearchComponent,
           ),
       },
-
-      // User Profiles
       {
         path: 'profile',
         title: 'Sociafy | My Profile',
@@ -131,8 +122,6 @@ export const routes: Routes = [
             (m) => m.UserProfileComponent,
           ),
       },
-
-      // Settings & Account Configuration (يشمل تغيير الباسورد لحساب مسجل دخوله)
       {
         path: 'changePassword',
         title: 'Sociafy | Change Password',
@@ -149,8 +138,6 @@ export const routes: Routes = [
             (m) => m.SettingsComponent,
           ),
       },
-
-      // Suggestions & Friends
       {
         path: 'suggestions',
         title: 'Sociafy | Suggestions',
@@ -159,8 +146,6 @@ export const routes: Routes = [
             (m) => m.SuggestionsComponent,
           ),
       },
-
-      // Notifications
       {
         path: 'notifications',
         title: 'Sociafy | Notifications',
@@ -171,8 +156,6 @@ export const routes: Routes = [
       },
     ],
   },
-
-  // 3. مسار الـ 404 (Wildcard)
   {
     path: '**',
     title: 'Sociafy | Page Not Found',

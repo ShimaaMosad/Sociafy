@@ -24,15 +24,10 @@ import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // Global Error Handling
     provideBrowserGlobalErrorListeners(),
-
-    // Change Detection
     provideZoneChangeDetection({
       eventCoalescing: true,
     }),
-
-    // Router Configuration
     provideRouter(
       routes,
 
@@ -47,17 +42,11 @@ export const appConfig: ApplicationConfig = {
         skipInitialTransition: true,
       }),
     ),
-
-    // HTTP Client Configuration
     provideHttpClient(
       withFetch(),
       withInterceptors([authInterceptor, loadingInterceptor, errorInterceptor]),
     ),
-
-    // Animations
     provideAnimations(),
-
-    // Toast Notifications
     provideToastr({
       timeOut: 3000,
       positionClass: 'toast-top-right',

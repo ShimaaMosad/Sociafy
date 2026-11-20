@@ -94,7 +94,6 @@ export class PostCardComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: () => {
-        // نكتفي بالعدد الحالي في حالة حدوث أي خطأ
       },
     });
   }
@@ -163,8 +162,6 @@ export class PostCardComponent implements OnInit {
           (this.isLiked
             ? (this.postData.likesCount || 0) + 1
             : Math.max(0, (this.postData.likesCount || 1) - 1));
-
-        // تحديث فوري لصفحة My Activity
         this.activityService.recordPostLike(postId, this.isLiked, this.postData);
 
         this.likeToggled.emit({
@@ -238,8 +235,6 @@ export class PostCardComponent implements OnInit {
         const nextCount = this.getTotalCommentsCount() + 1;
         this.postData.commentsCount = nextCount;
         this.commentsSync.setPostTotalCount(postId, nextCount);
-
-        // تحديث فوري لصفحة My Activity تحت Commented
         this.activityService.recordCommentCreated(postId, this.postData);
 
         this.cdr.detectChanges();
