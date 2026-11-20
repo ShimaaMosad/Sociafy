@@ -1,0 +1,31 @@
+<nav
+    class="h-[72px] flex justify-between items-center px-4 sm:px-8 lg:px-12 bg-white/95 backdrop-blur-md border-b border-border shadow-2xs sticky top-0 z-50">
+
+    <a routerLink="/home" class="flex items-center shrink-0 group cursor-pointer">
+        <img src="assets/logo.png" alt="Sociafy - Your infinite circle"
+            class="w-40 sm:w-44 md:w-48 h-auto max-h-[60px] object-contain group-hover:scale-[1.03] transition-transform duration-300" />
+    </a>
+
+    <div class="flex items-center gap-2.5 sm:gap-4 text-sm">
+
+        @if (isLoginRoute) {
+        <span class="hidden sm:inline text-muted">New to Sociafy?</span>
+
+        <a routerLink="/register"
+            class="group inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border text-text font-semibold hover:bg-primary hover:text-white hover:border-primary transition-all duration-300">
+            Create account
+            <i
+                class="fa-solid fa-arrow-up-right-from-square text-xs transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
+        </a>
+        } @else {
+        <span class="hidden sm:inline text-muted">Already one of us?</span>
+
+        <a routerLink="/login"
+            class="group inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border text-text font-semibold hover:bg-primary hover:text-white hover:border-primary transition-all duration-300">
+            Log in
+            <i
+                class="fa-solid fa-arrow-up-right-from-square text-xs transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
+        </a>
+        }
+    </div>
+</nav>

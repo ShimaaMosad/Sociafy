@@ -1,0 +1,132 @@
+<div class="max-w-2xl mx-auto space-y-6 py-4">
+    <div>
+        <h1 class="text-2xl font-extrabold text-text tracking-tight">Search</h1>
+        <p class="text-xs text-muted mt-1">Find people and posts across Sociafy.</p>
+    </div>
+
+    <!-- Single Search Input -->
+    <div class="relative">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-muted text-sm pointer-events-none">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+
+        <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()"
+            placeholder="Search by name, username, or post..."
+            class="w-full bg-white border border-border rounded-2xl pl-11 pr-10 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:border-primary transition-colors shadow-2xs" />
+
+        @if (searchQuery) {
+        <button type="button" (click)="clearQuery()" aria-label="Clear"
+            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted hover:text-text text-xs cursor-pointer">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        }
+    </div>
+
+    <!-- Tabs: All / People / Posts -->
+    <div class="flex items-center gap-2">
+        <button type="button" (click)="setTab('all')"
+            class="px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer"
+            [class.bg-primary]="activeTab === 'all'" [class.text-white]="activeTab === 'all'"
+            [class.bg-white]="activeTab !== 'all'" [class.border]="activeTab !== 'all'"
+            [class.border-border]="activeTab !== 'all'" [class.text-muted]="activeTab !== 'all'">
+            All
+        </button>
+
+        <button type="button" (click)="setTab('people')"
+            class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer"
+            [class.bg-primary]="activeTab === 'people'" [class.text-white]="activeTab === 'people'"
+            [class.bg-white]="activeTab !== 'people'" [class.border]="activeTab !== 'people'"
+            [class.border-border]="activeTab !== 'people'" [class.text-muted]="activeTab !== 'people'">
+            People ({{ filteredPeople.length }})
+        </button>
+
+        <button type="button" (click)="setTab('posts')"
+            class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer"
+            [class.bg-primary]="activeTab === 'posts'" [class.text-white]="activeTab === 'posts'"
+            [class.bg-white]="activeTab !== 'posts'" [class.border]="activeTab !== 'posts'"
+            [class.border-border]="activeTab !== 'posts'" [class.text-muted]="activeTab !== 'posts'">
+            Posts ({{ filteredPosts.length }})
+        </button>
+    </div>
+
+    @if (isLoading) {
+    <div class="bg-white rounded-3xl border border-border p-10 text-center text-muted text-sm shadow-2xs">
+        Searching...
+    </div>
+    } @else {
+    <div class="space-y-6">
+
+        <!-- People Section -->
+        @if (activeTab === 'all' || activeTab === 'people') {
+        <div class="space-y-2.5">
+            <h2 class="text-xs font-extrabold uppercase tracking-wider text-muted px-1">People</h2>
+
+            @if (filteredPeople.length > 0) {
+            <div class="bg-white rounded-3xl border border-border divide-y divide-border shadow-2xs overflow-hidden">
+                @for (person of filteredPeople; track person._id) {
+                <a [routerLink]="['/profile', person._id]"
+                    class="px-4 py-3.5 flex items-center justify-between gap-3 hover:bg-surface/70 transition-colors cursor-pointer">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <img [src]="person.photo || '/assets/sociafy-default-profile-avatar.png'" [alt]="person.name"
+                            class="w-10 h-10 rounded-full object-cover border border-border shrink-0" />
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold text-text truncate hover:text-primary transition-colors">
+                                {{ person.name }}
+                            </p>
+                            @if (person.username) {
+                            <p class="text-xs text-muted truncate">&#64;{{ person.username }}</p>
+                            }
+                        </div>
+                    </div>
+                    <span class="text-xs font-semibold text-primary shrink-0">View profile</span>
+                </a>
+                }
+            </div>
+            } @else {
+            <div class="bg-white rounded-3xl border border-border p-6 text-center text-muted text-xs shadow-2xs">
+                No people found.
+            </div>
+            }
+        </div>
+        }
+
+        <!-- Posts Section -->
+        @if (activeTab === 'all' || activeTab === 'posts') {
+        <div class="space-y-3">
+            <h2 class="text-xs font-extrabold uppercase tracking-wider text-muted px-1">Posts</h2>
+
+            @if (filteredPosts.length > 0) {
+            <div class="space-y-4">
+                @for (post of filteredPosts; track post._id || post.id) {
+                <app-post-card [postData]="post"></app-post-card>
+                }
+            </div>
+            } @else {
+            <div class="bg-white rounded-3xl border border-border p-6 text-center text-muted text-xs shadow-2xs">
+                No posts found.
+            </div>
+            }
+        </div>
+        }
+
+        <!-- Load More Button -->
+        @if (canLoadMore) {
+        <div class="pt-2 flex justify-center">
+            <button type="button" (click)="loadMore()" [disabled]="isLoadingMore"
+                class="px-6 py-2.5 bg-surface hover:bg-border/60 text-text font-bold text-xs rounded-xl transition-colors shadow-2xs flex items-center gap-2 cursor-pointer disabled:opacity-50">
+                @if (isLoadingMore) {
+                <i class="fa-solid fa-spinner fa-spin text-xs text-primary"></i> Loading more...
+                } @else if (activeTab === 'people') {
+                Load more people <i class="fa-solid fa-chevron-down text-xs text-primary"></i>
+                } @else if (activeTab === 'posts') {
+                Load more posts <i class="fa-solid fa-chevron-down text-xs text-primary"></i>
+                } @else {
+                Load more <i class="fa-solid fa-chevron-down text-xs text-primary"></i>
+                }
+            </button>
+        </div>
+        }
+
+    </div>
+    }
+</div>

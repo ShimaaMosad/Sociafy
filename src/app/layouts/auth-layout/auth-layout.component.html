@@ -1,0 +1,78 @@
+<div class="min-h-screen bg-white flex flex-col justify-between selection:bg-primary selection:text-white">
+
+    <app-auth-header></app-auth-header>
+
+    <main
+        class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-0 px-4 lg:px-12 py-2 max-w-[1500px] mx-auto w-full items-center">
+
+        <div
+            class="hidden lg:flex lg:col-span-6 bg-background rounded-[36px] p-10 xl:p-12 min-h-[760px] flex-col justify-between relative overflow-hidden shadow-xs">
+            <div>
+                <div class="inline-flex items-center gap-2 text-primary mb-4">
+                    <i class="fa-solid fa-sparkles text-sm"></i>
+                    <span class="text-xs font-bold tracking-[3px] uppercase">GOOD PEOPLE. GREAT CONNECTIONS.</span>
+                </div>
+
+                <h1 class="text-5xl xl:text-6xl font-extrabold text-primary-dark leading-[1.08] tracking-tight">
+                    Your people.<br />
+                    <span class="text-primary">Your place.</span>
+                </h1>
+
+                <p class="text-muted mt-4 text-base leading-relaxed max-w-md">
+                    Big interests. Small moments. Real connections.<br />
+                    Find the people who make you feel like you.
+                </p>
+            </div>
+
+            <div class="relative my-8 mx-auto w-full max-w-[460px]">
+                <img src="assets/socialphoto.jpg" alt="Friends enjoying time together"
+                    class="w-full h-[320px] object-cover rounded-[28px] -rotate-3 shadow-xl" />
+
+                <div
+                    class="absolute -top-6 -left-6 bg-white rounded-2xl p-4 shadow-lg flex items-center gap-3 -rotate-6 z-10">
+                    <div class="bg-peach rounded-xl p-3 text-primary">
+                        <i class="fa-regular fa-heart text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm text-primary-dark">You belong here.</h3>
+                        <p class="text-muted text-xs mt-0.5">Your kind of people are waiting.</p>
+                    </div>
+                </div>
+
+                <div class="absolute -right-4 top-4 bg-lime p-4 rounded-2xl rotate-12 text-primary shadow-sm z-10">
+                    <i class="fa-regular fa-star text-2xl"></i>
+                </div>
+
+                <div
+                    class="absolute -bottom-4 -left-6 bg-primary text-white px-4 py-3 rounded-xl -rotate-6 shadow-md z-10">
+                    <p class="text-xs font-semibold">Less scrolling. More belonging.</p>
+                </div>
+
+                <div class="absolute -bottom-14 -right-4 bg-white rounded-2xl p-5 shadow-xl rotate-6 w-56 z-10">
+                    <div class="flex justify-between items-center">
+                        <span class="text-primary text-[10px] font-bold tracking-widest uppercase">FIND YOUR
+                            CIRCLE</span>
+                        <i class="fa-regular fa-compass text-primary"></i>
+                    </div>
+                    <h3 class="font-bold text-base text-primary-dark mt-2">Weekend wanderers</h3>
+                    <div class="flex justify-between items-center mt-3">
+                        <p class="text-muted text-xs">128 curious souls</p>
+                        <div class="bg-lime text-primary-dark rounded-full w-6 h-6 flex items-center justify-center">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-6 flex items-center justify-center py-6 px-2 sm:px-8 w-full">
+            <div class="max-w-md w-full">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+
+    </main>
+
+    <app-auth-footer></app-auth-footer>
+
+</div>

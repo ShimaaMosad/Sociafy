@@ -1,0 +1,25 @@
+<div class="hidden md:flex lg:hidden bg-white border-b border-border px-8 py-2.5 justify-center shrink-0">
+    <nav class="flex items-center gap-2 bg-surface p-1 rounded-full border border-border">
+        <a routerLink="/home" routerLinkActive="bg-background text-primary font-bold"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center gap-2 px-5 py-2 rounded-full text-muted hover:text-text text-xs">
+            <i class="fa-solid fa-house"></i> Home
+        </a>
+        <a routerLink="/profile" routerLinkActive="bg-background text-primary font-bold"
+            class="flex items-center gap-2 px-5 py-2 rounded-full text-muted hover:text-text text-xs font-medium transition-colors">
+            <i class="fa-regular fa-user"></i> Profile
+        </a>
+        <a routerLink="/suggestions" routerLinkActive="bg-background text-primary font-bold"
+            class="flex items-center gap-2 px-5 py-2 rounded-full text-muted hover:text-text text-xs font-medium transition-colors">
+            <i class="fa-solid fa-user-group"></i> People
+        </a>
+        <a routerLink="/saved" routerLinkActive="bg-background text-primary font-bold"
+            class="flex items-center gap-2 px-5 py-2 rounded-full text-muted hover:text-text text-xs font-medium transition-colors">
+            <i class="fa-regular fa-bookmark"></i> Saved
+        </a>
+        <a routerLink="/settings" routerLinkActive="bg-background text-primary font-bold"
+            class="flex items-center gap-2 px-5 py-2 rounded-full text-muted hover:text-text text-xs font-medium transition-colors">
+            <i class="fa-solid fa-gear"></i> Settings
+        </a>
+    </nav>
+</div>

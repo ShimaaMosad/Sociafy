@@ -1,0 +1,26 @@
+<div class="max-w-2xl mx-auto space-y-6">
+    <div>
+        <h1 class="text-3xl font-extrabold text-text tracking-tight">Saved Bookmarks</h1>
+        <p class="text-sm text-muted mt-1">Access all your saved posts and moments in one place.</p>
+    </div>
+
+    @if (isLoading) {
+    <div class="bg-white rounded-3xl border border-border p-8 text-center text-muted text-sm shadow-2xs">
+        Loading bookmarks...
+    </div>
+    } @else {
+    @if (bookmarks.length > 0) {
+    <div class="flex flex-col gap-6">
+        @for (post of bookmarks; track post._id || post.id) {
+        <app-post-card [postData]="post" (postDeleted)="removePostFromList($event)"></app-post-card>
+        }
+    </div>
+    } @else {
+    <div class="bg-white rounded-3xl border border-border p-12 text-center text-muted text-sm shadow-2xs space-y-2">
+        <i class="fa-regular fa-bookmark text-3xl text-muted/60 mb-2"></i>
+        <p class="font-bold text-text">No bookmarks saved yet</p>
+        <p class="text-xs">Save posts while browsing your feed to find them easily later.</p>
+    </div>
+    }
+    }
+</div>

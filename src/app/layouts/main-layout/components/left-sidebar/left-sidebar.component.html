@@ -1,0 +1,73 @@
+<aside class="hidden lg:flex lg:col-span-3 flex-col justify-between sticky top-20 self-start pr-2">
+    <div class="space-y-3.5">
+        <nav class="space-y-1 text-sm font-medium">
+            <a routerLink="/home" routerLinkActive="bg-background text-primary font-bold"
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-muted hover:bg-white hover:text-text transition-colors">
+                <i class="fa-solid fa-house text-base"></i> Home
+            </a>
+            <a routerLink="/profile" routerLinkActive="bg-background text-primary font-bold"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-muted hover:bg-white hover:text-text transition-colors">
+                <i class="fa-regular fa-user text-base"></i> My profile
+            </a>
+            <a routerLink="/suggestions" routerLinkActive="bg-background text-primary font-bold"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-muted hover:bg-white hover:text-text transition-colors">
+                <i class="fa-solid fa-user-group text-sm"></i> Follow suggestions
+            </a>
+            <a routerLink="/saved" routerLinkActive="bg-background text-primary font-bold"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-muted hover:bg-white hover:text-text transition-colors">
+                <i class="fa-regular fa-bookmark text-base"></i> Bookmarks
+            </a>
+            <a routerLink="/feedactivity" routerLinkActive="bg-background text-primary font-bold"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-muted hover:bg-white hover:text-text transition-colors">
+                <i class="fa-solid fa-clock-rotate-left text-base"></i> My activity
+            </a>
+            <a routerLink="/notifications" routerLinkActive="bg-background text-primary font-bold"
+                class="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-muted hover:bg-white hover:text-text transition-colors">
+                <div class="flex items-center gap-3">
+                    <i class="fa-regular fa-bell text-base"></i> Notifications
+                </div>
+
+                @if (unreadNotificationsCount > 0) {
+                <span class="bg-primary text-white text-xs px-2 py-0.5 rounded-full font-bold shadow-xs">
+                    {{ unreadNotificationsCount }}
+                </span>
+                }
+            </a>
+            <a routerLink="/settings" routerLinkActive="bg-background text-primary font-bold"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-muted hover:bg-white hover:text-text transition-colors">
+                <i class="fa-solid fa-gear text-base"></i> Settings
+            </a>
+        </nav>
+
+        <a routerLink="/create-post"
+            class="w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold text-sm rounded-2xl transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-plus text-xs"></i> Create post
+        </a>
+
+        <div class="bg-white p-4 rounded-3xl border border-border space-y-1.5">
+            <p class="text-[10px] font-bold tracking-widest text-primary uppercase">YOUR LITTLE CORNER</p>
+            <h4 class="font-extrabold text-base text-text leading-snug">
+                A thought. A photo.<br />A reason to connect.
+            </h4>
+        </div>
+    </div>
+
+    <div class="pt-3 mt-3 border-t border-border flex items-center justify-between gap-2">
+        <a routerLink="/profile"
+            class="flex items-center gap-3 p-2 rounded-2xl hover:bg-white transition-colors min-w-0 flex-1">
+            <img [src]="currentUser?.photo || '/assets/sociafy-default-profile-avatar.png'"
+                class="w-9 h-9 rounded-full object-cover shrink-0 border border-border"
+                [alt]="currentUser?.name || 'User'" />
+            <div class="min-w-0">
+                <h4 class="font-bold text-xs text-text truncate">{{ currentUser?.name || 'Loading...' }}</h4>
+                <p class="text-[11px] text-primary font-medium">My profile</p>
+            </div>
+        </a>
+
+        <button type="button" (click)="onLogout()" title="Logout" aria-label="Logout"
+            class="w-9 h-9 rounded-2xl text-muted hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200/80 flex items-center justify-center transition-colors shrink-0 cursor-pointer">
+            <i class="fa-solid fa-right-from-bracket text-xs"></i>
+        </button>
+    </div>
+</aside>

@@ -1,0 +1,36 @@
+<div class="space-y-2 pt-1">
+    <form (ngSubmit)="submitComment()" class="flex items-center gap-2">
+        <label
+            class="w-9 h-9 rounded-xl bg-surface hover:bg-border/60 border border-border flex items-center justify-center text-muted hover:text-primary transition-colors cursor-pointer shrink-0"
+            title="Attach image">
+            <i class="fa-solid fa-image text-xs"></i>
+            <input type="file" accept="image/*" (change)="onImageSelected($event)" class="hidden" />
+        </label>
+
+        <div class="relative flex-1">
+            <input type="text" [(ngModel)]="content" name="content"
+                [placeholder]="isReply ? 'Write a reply...' : 'Write a thoughtful comment...'"
+                class="w-full bg-surface border border-border rounded-xl pl-4 pr-12 py-2.5 text-xs text-text placeholder:text-muted focus:outline-none focus:border-primary transition-colors" />
+
+            <button type="submit" [disabled]="isSubmitting || (!content.trim() && !selectedImage)"
+                class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white rounded-lg flex items-center justify-center transition-colors cursor-pointer">
+                @if (isSubmitting) {
+                <i class="fa-solid fa-spinner fa-spin text-[10px]"></i>
+                } @else {
+                <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                }
+            </button>
+        </div>
+    </form>
+
+    @if (imagePreview) {
+    <div class="relative inline-block pl-11">
+        <img [src]="imagePreview" class="rounded-xl max-h-32 object-cover border border-border"
+            alt="Selected attachment" />
+        <button type="button" (click)="clearImage()"
+            class="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-red-500 hover:underline cursor-pointer">
+            <i class="fa-solid fa-xmark"></i> Remove image
+        </button>
+    </div>
+    }
+</div>

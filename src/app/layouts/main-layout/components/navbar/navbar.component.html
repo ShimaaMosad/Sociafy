@@ -1,0 +1,50 @@
+<header
+    class="sticky top-0 z-50 h-[72px] bg-white border-b border-border px-4 sm:px-8 lg:px-12 flex items-center justify-between gap-4">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-5 lg:gap-7 h-full">
+        <a routerLink="/home" class="flex items-center shrink-0 group cursor-pointer">
+            <img src="assets/logo.png" alt="Sociafy - Your infinite circle"
+                class="w-40 sm:w-44 md:w-48 h-auto max-h-[60px] object-contain group-hover:scale-[1.03] transition-transform duration-300" />
+        </a>
+    </div>
+
+    <!-- Right Actions -->
+    <div class="flex items-center gap-2 sm:gap-3.5 shrink-0">
+
+        <span class="hidden xl:inline text-xs text-muted">
+            A place for your people.
+        </span>
+
+        <!-- Search Icon Button -->
+        <a routerLink="/search" aria-label="Search" title="Search"
+            class="w-9 h-9 rounded-full bg-surface hover:bg-primary/10 border border-border/70 flex items-center justify-center text-muted hover:text-primary transition-colors cursor-pointer">
+            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+        </a>
+
+        <!-- Notifications -->
+        <a routerLink="/notifications"
+            class="relative w-9 h-9 rounded-full hover:bg-surface flex items-center justify-center text-muted hover:text-primary transition-colors cursor-pointer">
+
+            <i class="fa-regular fa-bell text-base"></i>
+
+            @if (unreadCount > 0) {
+            <span
+                class="absolute top-1 right-1 min-w-[16px] h-4 px-1 bg-primary text-white rounded-full text-[10px] flex items-center justify-center font-bold">
+                {{ unreadCount }}
+            </span>
+            }
+        </a>
+
+        <!-- Current User -->
+        <a routerLink="/profile" class="flex items-center gap-2 pl-3 border-l border-border">
+
+            <img [src]="currentUser?.photo || '/assets/sociafy-default-profile-avatar.png'"
+                class="w-9 h-9 rounded-full object-cover border border-border" [alt]="currentUser?.name || 'User'" />
+
+            <h4 class="hidden lg:inline text-sm font-semibold text-text">
+                {{ currentUser?.name || 'Loading...' }}
+            </h4>
+        </a>
+    </div>
+</header>

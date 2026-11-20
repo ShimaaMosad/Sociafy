@@ -1,0 +1,88 @@
+<div class="max-w-2xl mx-auto space-y-6">
+    <div class="flex items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2.5">
+                <h1 class="text-3xl font-extrabold text-text tracking-tight">Notifications</h1>
+                @if (unreadCount > 0) {
+                <span class="px-2.5 py-0.5 text-xs font-extrabold rounded-full bg-primary/15 text-primary">
+                    {{ unreadCount }}
+                </span>
+                }
+            </div>
+            <p class="text-sm text-muted mt-1">Stay updated with what your community is doing.</p>
+        </div>
+
+        <button type="button" (click)="markAllAsRead()" [disabled]="unreadCount === 0 || isMarkingAll"
+            class="text-xs font-semibold text-primary hover:underline disabled:opacity-40 disabled:no-underline cursor-pointer">
+            Mark all as read
+        </button>
+    </div>
+
+    @if (isLoading) {
+    <div class="bg-white rounded-3xl border border-border p-12 text-center text-muted text-sm shadow-2xs">
+        Loading notifications...
+    </div>
+    } @else {
+    <div class="bg-white rounded-3xl border border-border divide-y divide-border shadow-2xs overflow-hidden">
+
+        @for (notification of visibleNotifications; track notification._id || notification.id) {
+        <div (click)="onNotificationClick(notification)"
+            class="p-4 sm:p-5 flex items-center justify-between gap-4 transition-all cursor-pointer hover:bg-surface/60"
+            [class.bg-background/60]="!notification.isRead" [class.bg-white]="notification.isRead">
+
+            <div class="flex items-center gap-3.5 min-w-0">
+                <div class="relative shrink-0">
+                    <img [src]="notification.actor?.photo || '/assets/sociafy-default-profile-avatar.png'"
+                        class="w-10 h-10 rounded-full object-cover border border-border"
+                        [alt]="notification.actor?.name" />
+
+                    <span
+                        class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center shadow-xs"
+                        [ngClass]="getNotificationIcon(notification.type).bgClass">
+                        <i [ngClass]="getNotificationIcon(notification.type).icon"></i>
+                    </span>
+                </div>
+
+                <div class="min-w-0">
+                    <p class="text-xs sm:text-sm text-text truncate">
+                        <strong class="font-bold">{{ notification.actor?.name || 'Someone' }}</strong>
+                        @if (notification.type === 'like') {
+                        liked your post.
+                        } @else if (notification.type === 'follow') {
+                        started following you.
+                        } @else if (notification.type === 'comment') {
+                        commented on your post.
+                        } @else {
+                        interacted with your content.
+                        }
+                    </p>
+                    <span class="text-[11px] text-muted">{{ notification.createdAt | date:'short' }}</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2.5 shrink-0">
+                @if (!notification.isRead) {
+                <button type="button" (click)="markSingleAsRead(notification, $event)"
+                    class="px-2.5 py-1 rounded-xl text-[11px] font-bold bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                    Read
+                </button>
+                <span class="w-2.5 h-2.5 bg-primary rounded-full shadow-xs"></span>
+                } @else {
+                <span
+                    class="px-2.5 py-1 rounded-xl text-[11px] font-semibold bg-surface text-muted border border-border/70">
+                    Read
+                </span>
+                }
+            </div>
+        </div>
+        } @empty {
+        <div class="p-12 text-center text-muted text-sm space-y-2">
+            <i class="fa-regular fa-bell-slash text-3xl text-muted/60 mb-2"></i>
+            <p class="font-bold text-text">No unread notifications</p>
+            <p class="text-xs">When people interact with you, you'll see it right here.</p>
+        </div>
+        }
+
+    </div>
+    }
+</div>

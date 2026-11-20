@@ -1,0 +1,78 @@
+<div class="max-w-2xl mx-auto space-y-6">
+    <div class="flex items-end justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold text-text tracking-tight">Follow suggestions</h1>
+            <p class="text-sm text-muted mt-1">Discover new people and expand your circle.</p>
+        </div>
+        @if (!isLoading && suggestions.length > 0) {
+        <span class="text-xs font-semibold text-muted shrink-0">
+            {{ suggestions.length }} suggestions
+        </span>
+        }
+    </div>
+
+    @if (isLoading) {
+    <div class="bg-white rounded-3xl border border-border p-8 text-center text-muted text-sm shadow-2xs">
+        Loading suggestions...
+    </div>
+    } @else {
+    <div class="bg-white rounded-3xl border border-border divide-y divide-border shadow-2xs overflow-hidden">
+
+        @for (user of suggestions; track getUserId(user)) {
+        <div class="p-5 flex items-center justify-between gap-4 hover:bg-surface/40 transition-colors">
+            <a [routerLink]="['/profile', getUserId(user)]" class="flex items-center gap-3.5 group flex-1 min-w-0">
+                <img [src]="user.photo && user.photo.trim() !== '' ? user.photo : '/assets/sociafy-default-profile-avatar.png'"
+                    class="w-12 h-12 rounded-full object-cover shrink-0 border border-border group-hover:opacity-90 transition-opacity"
+                    [alt]="user.name" />
+                <div class="min-w-0 flex-1">
+                    <h3 class="font-bold text-sm text-text group-hover:text-primary transition-colors truncate">
+                        {{ user.name }}
+                    </h3>
+                    <p class="text-xs text-muted truncate">
+                        @if (user.username) {
+                        &#64;{{ user.username }} ·
+                        }
+                        {{ user.mutualFollowersCount || 0 }} mutual connections
+                    </p>
+                </div>
+            </a>
+
+            <button type="button" (click)="onToggleFollow(user, $event)"
+                class="px-5 py-2 font-semibold text-xs rounded-xl transition-colors cursor-pointer shadow-xs shrink-0"
+                [class.bg-primary]="!user.isFollowing" [class.hover:bg-primary-hover]="!user.isFollowing"
+                [class.text-white]="!user.isFollowing" [class.bg-surface]="user.isFollowing"
+                [class.text-text]="user.isFollowing" [class.border]="user.isFollowing"
+                [class.border-border]="user.isFollowing">
+                {{ user.isFollowing ? 'Following' : 'Follow' }}
+            </button>
+        </div>
+        } @empty {
+        <div class="p-8 text-center text-muted text-sm">
+            No suggestions found at the moment.
+        </div>
+        }
+
+        @if (suggestions.length > 0) {
+        <div class="p-4 bg-surface/30 flex items-center justify-center">
+            @if (hasMore) {
+            <button type="button" (click)="onLoadMore()" [disabled]="isLoadingMore"
+                class="px-6 py-2.5 bg-surface hover:bg-border/60 text-text font-bold text-xs rounded-xl transition-colors shadow-2xs flex items-center gap-2 cursor-pointer disabled:opacity-50">
+                @if (isLoadingMore) {
+                <i class="fa-solid fa-spinner fa-spin text-xs"></i>
+                Loading more...
+                } @else {
+                Load more <i class="fa-solid fa-chevron-down text-xs text-primary"></i>
+
+                }
+            </button>
+            } @else {
+            <p class="text-xs text-muted font-medium">
+                No more suggestions available right now.
+            </p>
+            }
+        </div>
+        }
+
+    </div>
+    }
+</div>

@@ -1,0 +1,143 @@
+<div class="max-w-2xl mx-auto space-y-6 px-4 py-6 relative">
+
+    @if (isLoading) {
+    <div class="bg-white rounded-3xl border border-border p-12 text-center text-muted text-sm shadow-2xs">
+        Loading user profile...
+    </div>
+    } @else {
+    <!-- User Header Banner -->
+    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-border space-y-5 shadow-2xs">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <img [src]="userProfile?.photo && userProfile.photo.trim() !== '' ? userProfile.photo : '/assets/sociafy-default-profile-avatar.png'"
+                    class="w-20 h-20 rounded-full object-cover border-4 border-background" [alt]="userProfile?.name" />
+                <div>
+                    <h1 class="text-2xl font-extrabold text-text">{{ userProfile?.name || 'User Name' }}</h1>
+                    <p class="text-xs text-muted mt-0.5">
+                        @if (userProfile?.username || userProfile?.email) {
+                        &#64;{{ userProfile?.username || userProfile?.email?.split('@')[0] }}
+                        }
+                        @if (userProfile?.createdAt) {
+                        · Joined {{ userProfile?.createdAt | date:'MMMM yyyy' }}
+                        }
+                    </p>
+                </div>
+            </div>
+
+            <!-- يظهر فقط لو ده بروفايل شخص تاني -->
+            @if (!isOwnProfile) {
+            <button type="button" (click)="toggleFollow()"
+                class="px-6 py-2.5 text-xs font-semibold rounded-xl transition-colors cursor-pointer shadow-sm"
+                [class.bg-primary]="!isFollowing" [class.hover:bg-primary-hover]="!isFollowing"
+                [class.text-white]="!isFollowing" [class.bg-surface]="isFollowing" [class.text-text]="isFollowing"
+                [class.border]="isFollowing" [class.border-border]="isFollowing">
+                {{ isFollowing ? 'Following' : 'Follow' }}
+            </button>
+            }
+        </div>
+
+        <p class="text-sm text-text leading-relaxed">
+            {{ userProfile?.bio || '' }}
+        </p>
+
+        <!-- العدادات الحقيقية -->
+        <div class="flex items-center gap-6 text-xs text-muted pt-2 border-t border-border">
+            <span><strong class="text-text">{{ userPosts.length }}</strong> Posts</span>
+
+            <button type="button" (click)="openFollowersModal()"
+                class="hover:text-primary transition-colors cursor-pointer">
+                <strong class="text-text">{{ followersCount }}</strong> Followers
+            </button>
+
+            <button type="button" (click)="openFollowingModal()"
+                class="hover:text-primary transition-colors cursor-pointer">
+                <strong class="text-text">{{ followingCount }}</strong> Following
+            </button>
+        </div>
+    </div>
+
+    <!-- User Posts Feed -->
+    <div class="space-y-6">
+        @for (post of userPosts; track post._id || post.id) {
+        <app-post-card [postData]="post" (postDeleted)="removePostFromList($event)"></app-post-card>
+        } @empty {
+        <div class="bg-white rounded-3xl border border-border p-8 text-center text-muted text-sm shadow-2xs">
+            This user hasn't posted anything yet.
+        </div>
+        }
+    </div>
+    }
+
+    <!-- Modal عرض كل المتابعين أو المتابَعين وحالة الفولو لكل واحد -->
+    @if (showFollowModal) {
+    <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
+        <div class="bg-white rounded-3xl border border-border w-full max-w-md p-6 space-y-4 shadow-xl">
+            <div class="flex items-center justify-between pb-3 border-b border-border">
+                <h3 class="font-bold text-sm text-text">{{ modalTitle }}</h3>
+                <button type="button" (click)="closeModal()"
+                    class="w-8 h-8 rounded-full hover:bg-surface flex items-center justify-center text-muted hover:text-text cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Search Input -->
+            <div class="relative">
+                <i
+                    class="fa-solid fa-magnifying-glass text-xs text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                <input type="text" [value]="modalSearchQuery" (input)="onModalSearchChange($any($event.target).value)"
+                    placeholder="Search by name or username..." autocomplete="off"
+                    class="w-full pl-9 pr-8 py-2 text-xs bg-surface/60 border border-border rounded-xl text-text placeholder:text-muted focus:outline-none focus:border-primary transition-colors" />
+                @if (modalSearchQuery) {
+                <button type="button" (click)="clearModalSearch()" aria-label="Clear search"
+                    class="w-6 h-6 rounded-full hover:bg-surface flex items-center justify-center text-muted hover:text-text cursor-pointer absolute right-2 top-1/2 -translate-y-1/2">
+                    <i class="fa-solid fa-xmark text-[11px]"></i>
+                </button>
+                }
+            </div>
+
+            @if (isLoadingModalUsers) {
+            <div class="flex flex-col items-center justify-center py-10 space-y-2">
+                <i class="fa-solid fa-spinner fa-spin text-xl text-primary"></i>
+                <p class="text-xs text-muted font-semibold">Loading users...</p>
+            </div>
+            } @else {
+            <div class="max-h-64 overflow-y-auto space-y-3 pr-1">
+                @for (u of filteredModalUsers; track u._id) {
+                <div
+                    class="flex items-center justify-between p-2.5 bg-surface/50 hover:bg-surface rounded-2xl transition-colors border border-border/40">
+                    <a [routerLink]="['/profile', u._id]" (click)="closeModal()"
+                        class="flex items-center gap-3 group flex-1 min-w-0">
+                        <img [src]="u.photo && u.photo.trim() !== '' ? u.photo : '/assets/sociafy-default-profile-avatar.png'"
+                            class="w-10 h-10 rounded-full object-cover border border-border shrink-0" alt="Avatar" />
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-bold text-xs text-text group-hover:text-primary transition-colors truncate">
+                                {{ u.name }}</h4>
+                            @if (u.username) {
+                            <p class="text-[10px] text-muted truncate">&#64;{{ u.username }}</p>
+                            }
+                        </div>
+                    </a>
+
+                    @if (u._id !== currentUserId) {
+                    <button type="button" (click)="toggleUserFollowInModal(u)"
+                        class="px-3.5 py-1.5 text-[11px] font-semibold rounded-xl transition-colors cursor-pointer shrink-0 ml-2"
+                        [class.bg-primary]="!u.isFollowing" [class.hover:bg-primary-hover]="!u.isFollowing"
+                        [class.text-white]="!u.isFollowing" [class.bg-surface]="u.isFollowing"
+                        [class.text-text]="u.isFollowing" [class.border]="u.isFollowing"
+                        [class.border-border]="u.isFollowing">
+                        {{ u.isFollowing ? 'Following' : 'Follow' }}
+                    </button>
+                    }
+                </div>
+                } @empty {
+                <p class="text-center text-xs text-muted py-6">
+                    {{ modalSearchQuery ? 'No matching users found.' : 'No users found in this list.' }}
+                </p>
+                }
+            </div>
+            }
+        </div>
+    </div>
+    }
+
+</div>

@@ -1,0 +1,28 @@
+<div
+    class="min-h-screen bg-surface text-text font-sans flex flex-col justify-between selection:bg-primary selection:text-white">
+
+    <app-navbar></app-navbar>
+
+    <app-tablet-navigation></app-tablet-navigation>
+    <div
+        class="flex-1 max-w-[1440px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 px-4 sm:px-8 lg:px-12 py-6 items-start">
+
+        <div class="hidden lg:block lg:col-span-3 sticky top-20">
+            <app-left-sidebar></app-left-sidebar>
+        </div>
+
+        <main class="col-span-1 space-y-6 pb-24 md:pb-8 w-full" [class.lg:col-span-6]="showRightSidebar"
+            [class.lg:col-span-9]="!showRightSidebar">
+            <router-outlet></router-outlet>
+        </main>
+
+        @if (showRightSidebar) {
+        <div class="hidden lg:block lg:col-span-3 sticky top-20">
+            <app-right-sidebar></app-right-sidebar>
+        </div>
+        }
+    </div>
+
+    <app-mobile-navigation></app-mobile-navigation>
+
+</div>

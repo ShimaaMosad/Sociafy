@@ -1,0 +1,74 @@
+<div class="space-y-6 w-full">
+
+    <!-- Form Header -->
+    <div>
+        <span class="text-xs font-bold tracking-widest text-primary uppercase block mb-1.5">
+            WELCOME BACK
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-primary-dark tracking-tight mb-2">
+            Log in to Socialapp.
+        </h2>
+        <p class="text-sm text-muted">
+            Enter your details to access your account.
+        </p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+
+        <div>
+            <label for="login-email" class="block text-sm font-semibold text-text mb-1">Email address</label>
+            <div
+                class="relative rounded-xl border border-border bg-white focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted">
+                    <i class="fa-regular fa-envelope text-sm"></i>
+                </div>
+                <input type="email" id="login-email" formControlName="email" placeholder="makladshaimaa1@gmail.com"
+                    class="w-full pl-10 pr-4 py-3 bg-transparent text-sm text-text placeholder:text-muted focus:outline-none rounded-xl" />
+            </div>
+            @let emailControl = loginForm.controls.email;
+            @if (emailControl.touched && emailControl.hasError('required')) {
+            <p class="text-xs text-red-500 mt-1">Email is required.</p>
+            }
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-text mb-1">Password</label>
+            <app-password-input [control]="loginForm.controls.password" id="login-password"
+                placeholder="Enter password"></app-password-input>
+
+            @let passwordControl = loginForm.controls.password;
+            @if (passwordControl.touched){
+            <div class="text-xs text-red-500 mt-1 space-y-0.5">
+                @if (passwordControl.hasError('required')){
+                <p>Password is required.</p>
+                }
+                @if (passwordControl.hasError('minlength')){
+                <p>Password must be at least 8 characters.</p>
+                }
+                @if (passwordControl.hasError('pattern')){
+                <p>Password must include uppercase, lowercase, number, and a special character.</p>
+                }
+            </div>
+            }
+        </div>
+
+        <button type="submit"
+            class="w-full py-3.5 px-4 bg-primary hover:bg-primary/90 text-white font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md mt-5">
+            Log in
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+    </form>
+
+    <div class="text-center pt-2 pb-6">
+        <p class="text-xs text-muted">
+            Don't have an account? <a routerLink="/register" class="text-primary font-semibold hover:underline">Create
+                account</a>
+        </p>
+    </div>
+
+    <div class="flex items-center justify-center gap-1.5 text-xs text-muted pt-2 border-t border-border/40">
+        <i class="fa-solid fa-shield-halved text-sm text-muted"></i>
+        <span>Your space. Your people. Your privacy, always.</span>
+    </div>
+
+</div>
