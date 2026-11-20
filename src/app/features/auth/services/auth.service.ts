@@ -46,12 +46,6 @@ export class AuthService {
     this.tokenService.removeToken();
     this.currentUserService.clearCurrentUser();
 
-    const extraKeys = ['user', 'currentUser', 'userData', 'profile', 'authUser', 'token'];
-    for (const key of extraKeys) {
-      localStorage.removeItem(key);
-      sessionStorage.removeItem(key);
-    }
-
     this.router.navigate(['/login']);
   }
 }
