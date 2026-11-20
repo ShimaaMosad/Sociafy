@@ -5,7 +5,7 @@
         Loading user profile...
     </div>
     } @else {
-    
+
     <div class="bg-white p-6 sm:p-8 rounded-3xl border border-border space-y-5 shadow-2xs">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
@@ -18,13 +18,13 @@
                         &#64;{{ userProfile?.username || userProfile?.email?.split('@')[0] }}
                         }
                         @if (userProfile?.createdAt) {
-                        Â· Joined {{ userProfile?.createdAt | date:'MMMM yyyy' }}
+                        · Joined {{ userProfile?.createdAt | date:'MMMM yyyy' }}
                         }
                     </p>
                 </div>
             </div>
 
-            
+
             @if (!isOwnProfile) {
             <button type="button" (click)="toggleFollow()"
                 class="px-6 py-2.5 text-xs font-semibold rounded-xl transition-colors cursor-pointer shadow-sm"
@@ -40,7 +40,7 @@
             {{ userProfile?.bio || '' }}
         </p>
 
-        
+
         <div class="flex items-center gap-6 text-xs text-muted pt-2 border-t border-border">
             <span><strong class="text-text">{{ userPosts.length }}</strong> Posts</span>
 
@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    
+
     <div class="space-y-6">
         @for (post of userPosts; track post._id || post.id) {
         <app-post-card [postData]="post" (postDeleted)="removePostFromList($event)"></app-post-card>
@@ -68,7 +68,7 @@
     </div>
     }
 
-    
+
     @if (showFollowModal) {
     <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
         <div class="bg-white rounded-3xl border border-border w-full max-w-md p-6 space-y-4 shadow-xl">
@@ -80,7 +80,7 @@
                 </button>
             </div>
 
-            
+
             <div class="relative">
                 <i
                     class="fa-solid fa-magnifying-glass text-xs text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
