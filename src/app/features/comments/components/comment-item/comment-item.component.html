@@ -1,7 +1,7 @@
-<div class="space-y-2.5 pb-3 min-w-0">
+<div class="space-y-2.5 pb-3 w-full min-w-0 max-w-full">
 
     <!-- Main Comment -->
-    <div class="flex items-start gap-2 sm:gap-3 min-w-0">
+    <div class="flex items-start gap-2 sm:gap-3 w-full min-w-0">
         <button type="button" (click)="goToUserProfile(commentData.commentCreator)"
             class="shrink-0 mt-0.5 rounded-full focus:outline-none cursor-pointer"
             [title]="'View ' + commentData.commentCreator.name + ' profile'">
@@ -63,7 +63,8 @@
             <p class="text-xs text-text leading-relaxed break-words">{{ commentData.content }}</p>
 
             @if (commentData.image) {
-            <img [src]="commentData.image" class="mt-2 rounded-xl max-h-48 object-cover w-full border border-border"
+            <img [src]="commentData.image"
+                class="mt-2 rounded-xl max-h-48 object-cover w-full max-w-full border border-border"
                 alt="Comment image" />
             }
             }
@@ -105,7 +106,7 @@
 
     <!-- Reply Form -->
     @if (showReplyForm) {
-    <div class="pl-3 sm:pl-11 pt-1.5 pb-1.5 min-w-0">
+    <div class="pl-3 sm:pl-11 pt-1.5 pb-1.5 w-full min-w-0 max-w-full">
         <app-comment-form [postId]="postId" [parentCommentId]="commentData._id || commentData.id" [isReply]="true"
             [postData]="postData" (commentCreated)="onReplyAdded($event)">
         </app-comment-form>
@@ -178,7 +179,8 @@
                     <p class="text-xs text-text leading-relaxed break-words">{{ reply.content }}</p>
 
                     @if (reply.image) {
-                    <img [src]="reply.image" class="mt-2 rounded-xl max-h-40 object-cover w-full border border-border"
+                    <img [src]="reply.image"
+                        class="mt-2 rounded-xl max-h-40 object-cover w-full max-w-full border border-border"
                         alt="Reply image" />
                     }
                     }
@@ -215,4 +217,5 @@
         }
     </div>
     }
+
 </div>
