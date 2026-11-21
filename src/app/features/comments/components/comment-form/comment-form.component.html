@@ -1,7 +1,9 @@
 
-<div class="space-y-2 pt-1 w-full min-w-0">
+<div class="space-y-2 pt-1 w-full min-w-0 max-w-full">
 
-    <form (ngSubmit)="submitComment()" class="flex items-center gap-2 w-full min-w-0">
+    <form
+        (ngSubmit)="submitComment()"
+        class="flex items-center gap-2 w-full min-w-0">
 
         <!-- Attach Image -->
         <label
@@ -17,7 +19,7 @@
                 class="hidden" />
         </label>
 
-        <!-- Comment Input -->
+        <!-- Input and Submit Button -->
         <div class="relative flex-1 min-w-0">
 
             <input
@@ -25,13 +27,12 @@
                 [(ngModel)]="content"
                 name="content"
                 [placeholder]="isReply ? 'Write a reply...' : 'Write a thoughtful comment...'"
-                class="w-full min-w-0 bg-surface border border-border rounded-xl pl-3 sm:pl-4 pr-10 py-2.5 text-xs text-text placeholder:text-muted focus:outline-none focus:border-primary transition-colors" />
+                class="block w-full min-w-0 bg-surface border border-border rounded-xl pl-3 sm:pl-4 pr-11 py-2.5 text-xs text-text placeholder:text-muted focus:outline-none focus:border-primary transition-colors" />
 
-            <!-- Submit Button -->
             <button
                 type="submit"
                 [disabled]="isSubmitting || (!content.trim() && !selectedImage)"
-                class="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white rounded-lg flex items-center justify-center transition-colors cursor-pointer shrink-0">
+                class="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white rounded-lg flex items-center justify-center transition-colors cursor-pointer">
 
                 @if (isSubmitting) {
                     <i class="fa-solid fa-spinner fa-spin text-[10px]"></i>
@@ -59,7 +60,6 @@
 
                 <i class="fa-solid fa-xmark"></i>
                 Remove image
-
             </button>
         </div>
     }
