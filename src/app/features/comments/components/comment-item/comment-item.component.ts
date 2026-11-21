@@ -55,6 +55,7 @@ export class CommentItemComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.resolveCurrentUser();
     this.currentUserId = this.extractId(this.currentUser);
+    this.commentData = this.normalizeComment(this.commentData);
     this.likesCount = this.commentData.likesCount || this.commentData.likes?.length || 0;
 
     const cid = this.extractId(this.commentData);
@@ -150,6 +151,39 @@ export class CommentItemComponent implements OnInit {
   getReplyLikesCount(reply: any): number {
     if (typeof reply?.likesCount === 'number') return reply.likesCount;
     return Array.isArray(reply?.likes) ? reply.likes.length : 0;
+  }
+
+  private normalizeComment(comment: any): CommentItem {
+    if (!comment || typeof comment !== 'object') return comment;
+
+    const rawCreator =
+      comment?.commentCreator || comment?.user || comment?.author || comment?.createdBy || {};
+    const creatorId =
+      (typeof rawCreator === 'string' ? rawCreator : this.extractId(rawCreator)) ||
+      this.currentUserId;
+
+    const isSelf = Boolean(this.currentUserId && creatorId && creatorId === this.currentUserId);
+    const name =
+      (typeof rawCreator === 'object' ? rawCreator?.name || rawCreator?.username : '') ||
+      (isSelf ? this.currentUser?.name || this.currentUser?.username : '') ||
+      'User';
+
+    const photo =
+      this.extractPhoto(rawCreator) ||
+      this.extractPhoto(comment) ||
+      (isSelf ? this.extractPhoto(this.currentUser) : '') ||
+      '/assets/sociafy-default-profile-avatar.png';
+
+    return {
+      ...comment,
+      commentCreator: {
+        ...(typeof rawCreator === 'object' ? rawCreator : {}),
+        _id: creatorId,
+        id: creatorId,
+        name,
+        photo,
+      },
+    };
   }
 
   private normalizeReply(reply: any): CommentItem & { isLiked?: boolean } {
@@ -620,10 +654,10 @@ export class CommentItemComponent implements OnInit {
 
     const currentId = String(this.currentUserId || '').trim();
     if (currentId && targetId === currentId) {
-      this.router.navigate(['/profile']);
+      void this.router.navigate(['/profile']);
       return;
     }
 
-    this.router.navigate(['/user-profile', targetId]);
+    void this.router.navigate(['/profile', targetId]);
   }
 }

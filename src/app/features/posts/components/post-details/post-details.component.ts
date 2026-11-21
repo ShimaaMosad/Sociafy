@@ -56,11 +56,13 @@ export class PostDetailsComponent implements OnInit {
   likedIds = new Set<string>();
   isLoadingPost = false;
   isLoadingComments = false;
+  currentUser: any = null;
   currentUserId = '';
   replyCountsByCommentId = new Map<string, number>();
 
   ngOnInit(): void {
     this.resolveBackNavigation();
+    this.currentUser = this.resolveCurrentUser();
     this.currentUserId = this.getUserId();
     this.likedIds = new Set<string>(this.commentsService.getLikedCommentIds());
 
@@ -77,6 +79,107 @@ export class PostDetailsComponent implements OnInit {
         this.loadComments();
       }
     });
+  }
+
+  private resolveCurrentUser(): any {
+    const u: any = this.currentUserService.getCurrentUser();
+    if (u?.data?.user) return u.data.user;
+    if (u?.user) return u.user;
+    if (u && (u._id || u.id)) return u;
+
+    for (const key of ['user', 'currentUser', 'userData', 'profile', 'authUser']) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) continue;
+        const parsed = JSON.parse(raw);
+        const found = parsed?.data?.user || parsed?.user || parsed;
+        if (found?._id || found?.id) return found;
+      } catch {}
+    }
+    return null;
+  }
+
+  private extractPhoto(obj: any): string {
+    if (!obj || typeof obj !== 'object') return '';
+    const raw =
+      obj?.photo ||
+      obj?.avatar ||
+      obj?.profileImage ||
+      obj?.profilePhoto ||
+      obj?.image ||
+      obj?.user?.photo ||
+      obj?.user?.avatar ||
+      '';
+    return typeof raw === 'string' && raw.trim() ? raw.trim() : '';
+  }
+
+  getCreatorName(item: any): string {
+    const creator = item?.commentCreator || item?.user || item?.author || item?.createdBy;
+    if (creator?.name) return creator.name;
+    if (creator?.username) return creator.username;
+    const creatorId = typeof creator === 'string' ? creator : this.extractId(creator);
+    if (this.currentUserId && creatorId === this.currentUserId && this.currentUser?.name) {
+      return this.currentUser.name;
+    }
+    return 'User';
+  }
+
+  getCreatorPhoto(item: any): string {
+    const creator = item?.commentCreator || item?.user || item?.author || item?.createdBy;
+    const creatorId = typeof creator === 'string' ? creator : this.extractId(creator);
+    const isSelf = Boolean(this.currentUserId && creatorId && creatorId === this.currentUserId);
+
+    const photo =
+      this.extractPhoto(creator) || (isSelf ? this.extractPhoto(this.currentUser) : '') || '';
+
+    return photo || '/assets/sociafy-default-profile-avatar.png';
+  }
+
+  goToUserProfile(creator: any): void {
+    const targetId =
+      typeof creator === 'string'
+        ? creator.trim()
+        : String(creator?._id || creator?.id || creator?.userId || '').trim();
+    if (!targetId) return;
+
+    const currentId = String(this.currentUserId || '').trim();
+    if (currentId && targetId === currentId) {
+      void this.router.navigate(['/profile']);
+      return;
+    }
+
+    void this.router.navigate(['/profile', targetId]);
+  }
+
+  private ensureCreatorInfo(item: any): any {
+    if (!item || typeof item !== 'object') return item;
+    const rawCreator = item?.commentCreator || item?.user || item?.author || item?.createdBy || {};
+    const creatorId =
+      (typeof rawCreator === 'string' ? rawCreator : this.extractId(rawCreator)) ||
+      this.currentUserId;
+    const isSelf = Boolean(this.currentUserId && creatorId && creatorId === this.currentUserId);
+
+    const name =
+      (typeof rawCreator === 'object' ? rawCreator?.name || rawCreator?.username : '') ||
+      (isSelf ? this.currentUser?.name || this.currentUser?.username : '') ||
+      'User';
+
+    const photo =
+      this.extractPhoto(rawCreator) ||
+      this.extractPhoto(item) ||
+      (isSelf ? this.extractPhoto(this.currentUser) : '') ||
+      '/assets/sociafy-default-profile-avatar.png';
+
+    return {
+      ...item,
+      commentCreator: {
+        ...(typeof rawCreator === 'object' ? rawCreator : {}),
+        _id: creatorId,
+        id: creatorId,
+        name,
+        photo,
+      },
+    };
   }
 
   private getCandidateReturnUrl(): string {
@@ -180,6 +283,9 @@ export class PostDetailsComponent implements OnInit {
   }
 
   private getUserId(): string {
+    if (this.currentUser?._id) return String(this.currentUser._id);
+    if (this.currentUser?.id) return String(this.currentUser.id);
+
     const user: any = this.currentUserService.getCurrentUser();
     if (user?._id) return String(user._id);
     if (user?.id) return String(user.id);
@@ -224,7 +330,7 @@ export class PostDetailsComponent implements OnInit {
     this.commentsService.getPostComments(this.postId, 1, 50).subscribe({
       next: (res: any) => {
         const list = Array.isArray(res?.data?.comments) ? res.data.comments : [];
-        this.comments = list.map((c: any) => this.hydrateItemLike(c));
+        this.comments = list.map((c: any) => this.hydrateItemLike(this.ensureCreatorInfo(c)));
         this.replyCountsByCommentId.clear();
 
         for (const c of this.comments) {
@@ -349,7 +455,7 @@ export class PostDetailsComponent implements OnInit {
           : Array.isArray(res?.data?.comments)
             ? res.data.comments
             : [];
-        const hydrated = list.map((r: any) => this.hydrateItemLike(r));
+        const hydrated = list.map((r: any) => this.hydrateItemLike(this.ensureCreatorInfo(r)));
         this.repliesMap[commentId] = hydrated;
 
         const targetComment = this.comments.find((c: any) => this.extractId(c) === commentId);

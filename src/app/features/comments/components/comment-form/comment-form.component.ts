@@ -71,6 +71,41 @@ export class CommentFormComponent {
     return {};
   }
 
+  private extractUserPhoto(user: any): string {
+    if (!user || typeof user !== 'object') return '';
+    const raw =
+      user?.photo ||
+      user?.avatar ||
+      user?.profileImage ||
+      user?.profilePhoto ||
+      user?.image ||
+      user?.user?.photo ||
+      user?.user?.avatar ||
+      '';
+    return typeof raw === 'string' && raw.trim()
+      ? raw.trim()
+      : '/assets/sociafy-default-profile-avatar.png';
+  }
+
+  private mergeCreator(rawCreator: any, creatorObj: any) {
+    const objCreator = typeof rawCreator === 'object' && rawCreator ? rawCreator : {};
+    const id = objCreator?._id || objCreator?.id || creatorObj._id || '';
+    return {
+      ...creatorObj,
+      ...objCreator,
+      _id: id,
+      id,
+      name: objCreator?.name || objCreator?.username || creatorObj.name || 'User',
+      username: objCreator?.username || creatorObj.username || '',
+      photo:
+        objCreator?.photo ||
+        objCreator?.avatar ||
+        objCreator?.profileImage ||
+        creatorObj.photo ||
+        '/assets/sociafy-default-profile-avatar.png',
+    };
+  }
+
   submitComment(): void {
     const trimmed = this.content.trim();
     if ((!trimmed && !this.selectedImage) || this.isSubmitting) return;
@@ -84,12 +119,13 @@ export class CommentFormComponent {
     }
 
     const currentUser = this.resolveCurrentUser();
+    const userId = currentUser?._id || currentUser?.id || '';
     const creatorObj = {
-      _id: currentUser?._id || currentUser?.id || '',
-      id: currentUser?._id || currentUser?.id || '',
-      name: currentUser?.name || 'User',
+      _id: userId,
+      id: userId,
+      name: currentUser?.name || currentUser?.username || 'User',
       username: currentUser?.username || '',
-      photo: currentUser?.photo || '',
+      photo: this.extractUserPhoto(currentUser),
     };
 
     if (this.isReply && this.parentCommentId) {
@@ -105,7 +141,7 @@ export class CommentFormComponent {
             likes: Array.isArray(rawReply?.likes) ? rawReply.likes : [],
             likesCount: typeof rawReply?.likesCount === 'number' ? rawReply.likesCount : 0,
             createdAt: rawReply?.createdAt || new Date().toISOString(),
-            commentCreator: rawReply?.commentCreator || creatorObj,
+            commentCreator: this.mergeCreator(rawReply?.commentCreator, creatorObj),
           };
 
           this.content = '';
@@ -136,7 +172,7 @@ export class CommentFormComponent {
             repliesCount:
               typeof rawComment?.repliesCount === 'number' ? rawComment.repliesCount : 0,
             createdAt: rawComment?.createdAt || new Date().toISOString(),
-            commentCreator: rawComment?.commentCreator || creatorObj,
+            commentCreator: this.mergeCreator(rawComment?.commentCreator, creatorObj),
           };
 
           this.content = '';
