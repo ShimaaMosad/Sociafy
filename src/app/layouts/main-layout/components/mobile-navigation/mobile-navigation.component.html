@@ -1,29 +1,32 @@
 <nav
-    class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border px-2 py-2 flex items-center justify-around z-50">
+    class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border px-1.5 py-1.5 flex items-center justify-around z-50">
     <a routerLink="/home" routerLinkActive="bg-background text-primary font-bold"
         [routerLinkActiveOptions]="{ exact: true }"
-        class="flex flex-col items-center gap-1 px-3 py-1 rounded-xl text-muted hover:text-primary transition-colors">
-        <i class="fa-solid fa-house text-base"></i>
+        class="flex flex-col items-center gap-1 px-2.5 py-1 rounded-xl text-muted hover:text-primary transition-colors">
+        <i class="fa-solid fa-house text-sm"></i>
         <span class="text-[10px]">Home</span>
     </a>
-    <a routerLink="/profile" routerLinkActive="bg-background text-primary font-bold"
-        class="flex flex-col items-center gap-1 px-3 py-1 rounded-xl text-muted hover:text-primary transition-colors">
-        <i class="fa-regular fa-user text-base"></i>
-        <span class="text-[10px] font-medium">Profile</span>
-    </a>
+
     <a routerLink="/suggestions" routerLinkActive="bg-background text-primary font-bold"
-        class="flex flex-col items-center gap-1 px-3 py-1 rounded-xl text-muted hover:text-primary transition-colors">
-        <i class="fa-solid fa-user-group text-base"></i>
+        class="flex flex-col items-center gap-1 px-2.5 py-1 rounded-xl text-muted hover:text-primary transition-colors">
+        <i class="fa-solid fa-user-group text-sm"></i>
         <span class="text-[10px] font-medium">People</span>
     </a>
+
+    <a routerLink="/create-post" aria-label="Create post"
+        class="flex flex-col items-center justify-center w-11 h-11 rounded-2xl bg-primary hover:bg-primary-hover text-white shadow-xs transition-colors -mt-3 border-2 border-white">
+        <i class="fa-solid fa-plus text-sm"></i>
+    </a>
+
     <a routerLink="/saved" routerLinkActive="bg-background text-primary font-bold"
-        class="flex flex-col items-center gap-1 px-3 py-1 rounded-xl text-muted hover:text-primary transition-colors">
-        <i class="fa-regular fa-bookmark text-base"></i>
+        class="flex flex-col items-center gap-1 px-2.5 py-1 rounded-xl text-muted hover:text-primary transition-colors">
+        <i class="fa-regular fa-bookmark text-sm"></i>
         <span class="text-[10px] font-medium">Saved</span>
     </a>
-    <a routerLink="/settings" routerLinkActive="bg-background text-primary font-bold"
-        class="flex flex-col items-center gap-1 px-3 py-1 rounded-xl text-muted hover:text-primary transition-colors">
-        <i class="fa-solid fa-gear text-base"></i>
-        <span class="text-[10px] font-medium">Settings</span>
+
+    <a routerLink="/profile" routerLinkActive="bg-background text-primary font-bold"
+        class="flex flex-col items-center gap-1 px-2.5 py-1 rounded-xl text-muted hover:text-primary transition-colors">
+        <i class="fa-regular fa-user text-sm"></i>
+        <span class="text-[10px] font-medium">Profile</span>
     </a>
 </nav>

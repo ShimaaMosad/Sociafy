@@ -1,25 +1,38 @@
-<div class="hidden md:flex lg:hidden bg-white border-b border-border px-8 py-2.5 justify-center shrink-0">
-    <nav class="flex items-center gap-2 bg-surface p-1 rounded-full border border-border">
-        <a routerLink="/home" routerLinkActive="bg-background text-primary font-bold"
-            [routerLinkActiveOptions]="{ exact: true }"
-            class="flex items-center gap-2 px-5 py-2 rounded-full text-muted hover:text-text text-xs">
-            <i class="fa-solid fa-house"></i> Home
+<div class="hidden md:flex lg:hidden bg-white border-b border-border px-6 py-2.5 justify-center shrink-0">
+    <div class="flex items-center gap-2 max-w-full overflow-x-auto">
+        <nav class="flex items-center gap-1.5 bg-surface p-1 rounded-full border border-border">
+            <a routerLink="/home" routerLinkActive="bg-background text-primary font-bold"
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="flex items-center gap-2 px-4 py-1.5 rounded-full text-muted hover:text-text text-xs">
+                <i class="fa-solid fa-house"></i> Home
+            </a>
+            <a routerLink="/profile" routerLinkActive="bg-background text-primary font-bold"
+                class="flex items-center gap-2 px-4 py-1.5 rounded-full text-muted hover:text-text text-xs font-medium transition-colors">
+                <i class="fa-regular fa-user"></i> Profile
+            </a>
+            <a routerLink="/suggestions" routerLinkActive="bg-background text-primary font-bold"
+                class="flex items-center gap-2 px-4 py-1.5 rounded-full text-muted hover:text-text text-xs font-medium transition-colors">
+                <i class="fa-solid fa-user-group"></i> People
+            </a>
+            <a routerLink="/saved" routerLinkActive="bg-background text-primary font-bold"
+                class="flex items-center gap-2 px-4 py-1.5 rounded-full text-muted hover:text-text text-xs font-medium transition-colors">
+                <i class="fa-regular fa-bookmark"></i> Saved
+            </a>
+            <a routerLink="/settings" routerLinkActive="bg-background text-primary font-bold"
+                class="flex items-center gap-2 px-4 py-1.5 rounded-full text-muted hover:text-text text-xs font-medium transition-colors">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
+        </nav>
+
+        <a routerLink="/create-post"
+            class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary hover:bg-primary-hover text-white text-xs font-bold transition-colors shrink-0">
+            <i class="fa-solid fa-plus text-[11px]"></i> Create post
         </a>
-        <a routerLink="/profile" routerLinkActive="bg-background text-primary font-bold"
-            class="flex items-center gap-2 px-5 py-2 rounded-full text-muted hover:text-text text-xs font-medium transition-colors">
-            <i class="fa-regular fa-user"></i> Profile
-        </a>
-        <a routerLink="/suggestions" routerLinkActive="bg-background text-primary font-bold"
-            class="flex items-center gap-2 px-5 py-2 rounded-full text-muted hover:text-text text-xs font-medium transition-colors">
-            <i class="fa-solid fa-user-group"></i> People
-        </a>
-        <a routerLink="/saved" routerLinkActive="bg-background text-primary font-bold"
-            class="flex items-center gap-2 px-5 py-2 rounded-full text-muted hover:text-text text-xs font-medium transition-colors">
-            <i class="fa-regular fa-bookmark"></i> Saved
-        </a>
-        <a routerLink="/settings" routerLinkActive="bg-background text-primary font-bold"
-            class="flex items-center gap-2 px-5 py-2 rounded-full text-muted hover:text-text text-xs font-medium transition-colors">
-            <i class="fa-solid fa-gear"></i> Settings
-        </a>
-    </nav>
+
+        <button type="button" (click)="onLogout()" title="Logout" aria-label="Logout"
+            class="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-muted hover:text-red-600 hover:bg-red-50 border border-border hover:border-red-200/80 text-xs font-semibold transition-colors cursor-pointer shrink-0">
+            <i class="fa-solid fa-right-from-bracket text-[11px]"></i>
+            <span>Logout</span>
+        </button>
+    </div>
 </div>

@@ -1,31 +1,37 @@
 <header
-    class="sticky top-0 z-50 h-[72px] bg-white border-b border-border px-4 sm:px-8 lg:px-12 flex items-center justify-between gap-4">
+    class="sticky top-0 z-50 h-[72px] bg-white border-b border-border px-4 sm:px-8 lg:px-12 flex items-center justify-between gap-3">
 
-    
-    <div class="flex items-center gap-5 lg:gap-7 h-full">
+    <!-- Logo -->
+    <div class="flex items-center gap-5 lg:gap-7 h-full min-w-0">
         <a routerLink="/home" class="flex items-center shrink-0 group cursor-pointer">
             <img src="assets/logo.png" alt="Sociafy - Your infinite circle"
-                class="w-40 sm:w-44 md:w-48 h-auto max-h-[60px] object-contain group-hover:scale-[1.03] transition-transform duration-300" />
+                class="w-32 sm:w-44 md:w-48 h-auto max-h-[60px] object-contain group-hover:scale-[1.03] transition-transform duration-300" />
         </a>
     </div>
 
-    
-    <div class="flex items-center gap-2 sm:gap-3.5 shrink-0">
+    <!-- Actions + Profile + Logout -->
+    <div class="flex items-center gap-2 sm:gap-3 shrink-0">
 
         <span class="hidden xl:inline text-xs text-muted">
             A place for your people.
         </span>
 
-        
+        <!-- Quick Create Post button for Mobile & Tablet (since left sidebar is hidden below lg) -->
+        <a routerLink="/create-post" aria-label="Create post" title="Create post"
+            class="lg:hidden h-9 px-3 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer shrink-0">
+            <i class="fa-solid fa-plus text-[11px]"></i>
+            <span class="hidden sm:inline">Post</span>
+        </a>
+
+        <!-- Search -->
         <a routerLink="/search" aria-label="Search" title="Search"
-            class="w-9 h-9 rounded-full bg-surface hover:bg-primary/10 border border-border/70 flex items-center justify-center text-muted hover:text-primary transition-colors cursor-pointer">
+            class="w-9 h-9 rounded-full bg-surface hover:bg-primary/10 border border-border/70 flex items-center justify-center text-muted hover:text-primary transition-colors cursor-pointer shrink-0">
             <i class="fa-solid fa-magnifying-glass text-sm"></i>
         </a>
 
-        
-        <a routerLink="/notifications"
-            class="relative w-9 h-9 rounded-full hover:bg-surface flex items-center justify-center text-muted hover:text-primary transition-colors cursor-pointer">
-
+        <!-- Notifications -->
+        <a routerLink="/notifications" aria-label="Notifications" title="Notifications"
+            class="relative w-9 h-9 rounded-full hover:bg-surface flex items-center justify-center text-muted hover:text-primary transition-colors cursor-pointer shrink-0">
             <i class="fa-regular fa-bell text-base"></i>
 
             @if (unreadCount > 0) {
@@ -36,15 +42,21 @@
             }
         </a>
 
-        
-        <a routerLink="/profile" class="flex items-center gap-2 pl-3 border-l border-border">
-
+        <!-- Profile Link -->
+        <a routerLink="/profile" class="flex items-center gap-2 pl-2 sm:pl-3 border-l border-border shrink-0">
             <img [src]="currentUser?.photo || '/assets/sociafy-default-profile-avatar.png'"
-                class="w-9 h-9 rounded-full object-cover border border-border" [alt]="currentUser?.name || 'User'" />
+                class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border border-border"
+                [alt]="currentUser?.name || 'User'" />
 
             <h4 class="hidden lg:inline text-sm font-semibold text-text">
                 {{ currentUser?.name || 'Loading...' }}
             </h4>
         </a>
+
+        <!-- Logout button visible on Mobile & Tablet (and accessible in header) -->
+        <button type="button" (click)="onLogout()" title="Logout" aria-label="Logout"
+            class="lg:hidden w-9 h-9 rounded-xl text-muted hover:text-red-600 hover:bg-red-50 border border-border/70 hover:border-red-200/80 flex items-center justify-center transition-colors cursor-pointer shrink-0">
+            <i class="fa-solid fa-right-from-bracket text-xs"></i>
+        </button>
     </div>
 </header>

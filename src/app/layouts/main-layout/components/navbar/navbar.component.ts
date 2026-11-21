@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { NotificationsService } from '../../../../features/notifications/services/notifications.service';
 import { CurrentUserService } from '../../../../core/services/current-user.service';
 import { User } from '../../../../features/auth/models/auth-response.interface';
+import { AuthService } from '../../../../features/auth/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,6 +15,8 @@ import { User } from '../../../../features/auth/models/auth-response.interface';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent implements OnInit, OnDestroy {
+  private authService = inject(AuthService);
+
   private notificationsService = inject(NotificationsService);
   private currentUserService = inject(CurrentUserService);
   private unreadSub?: Subscription;
@@ -43,5 +46,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
         console.error('Error fetching unread notifications count:', err);
       },
     });
+  }
+  onLogout(): void {
+    this.authService.logout();
   }
 }
