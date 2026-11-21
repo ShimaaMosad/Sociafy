@@ -1,66 +1,389 @@
 
-<div class="space-y-2 pt-1 w-full min-w-0 max-w-full">
+<div class="space-y-2.5 pb-3 w-full min-w-0 max-w-full">
 
-    <form
-        (ngSubmit)="submitComment()"
-        class="flex items-center gap-2 w-full min-w-0 max-w-full">
+    <!-- Main Comment -->
+    <div class="flex items-start gap-3 w-full min-w-0">
 
-        <!-- Attach Image -->
-        <label
-            class="w-9 h-9 rounded-xl bg-surface hover:bg-border/60 border border-border flex items-center justify-center text-muted hover:text-primary transition-colors cursor-pointer shrink-0"
-            title="Attach image">
+        <img
+            [src]="commentData.commentCreator.photo || '/assets/sociafy-default-profile-avatar.png'"
+            class="w-8 h-8 rounded-full object-cover mt-0.5 shrink-0 border border-border"
+            [alt]="commentData.commentCreator.name" />
 
-            <i class="fa-solid fa-image text-xs"></i>
+        <div class="bg-surface border border-border/70 p-3.5 rounded-2xl flex-1 min-w-0 space-y-1.5">
 
-            <input
-                type="file"
-                accept="image/*"
-                (change)="onImageSelected($event)"
-                class="hidden" />
-        </label>
+            <div class="flex items-center justify-between gap-2 min-w-0">
 
-        <!-- Input + Submit -->
-        <div class="relative flex-1 min-w-0">
+                <span class="font-bold text-xs text-text truncate">
+                    {{ commentData.commentCreator.name }}
+                </span>
 
-            <input
-                type="text"
-                [(ngModel)]="content"
-                name="content"
-                [placeholder]="isReply ? 'Write a reply...' : 'Write a thoughtful comment...'"
-                class="block w-full min-w-0 max-w-full bg-surface border border-border rounded-xl pl-3 sm:pl-4 pr-11 py-2.5 text-xs text-text placeholder:text-muted focus:outline-none focus:border-primary transition-colors" />
+                <span class="text-[10px] text-muted shrink-0">
+                    {{ commentData.createdAt | date:'short' }}
+                </span>
 
-            <button
-                type="submit"
-                [disabled]="isSubmitting || (!content.trim() && !selectedImage)"
-                class="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white rounded-lg flex items-center justify-center transition-colors cursor-pointer shrink-0">
+            </div>
 
-                @if (isSubmitting) {
-                    <i class="fa-solid fa-spinner fa-spin text-[10px]"></i>
-                } @else {
-                    <i class="fa-solid fa-paper-plane text-[10px]"></i>
+            <!-- Edit Comment -->
+            @if (isEditingComment) {
+
+                <div class="space-y-2 pt-1">
+
+                    <input
+                        type="text"
+                        [(ngModel)]="editCommentContent"
+                        name="editCommentContent"
+                        placeholder="Edit comment text..."
+                        class="w-full min-w-0 bg-white border border-border rounded-xl px-3 py-2 text-xs text-text focus:outline-none focus:border-primary transition-colors" />
+
+                    @if (editCommentImagePreview) {
+
+                        <div class="relative inline-block max-w-full">
+
+                            <img
+                                [src]="editCommentImagePreview"
+                                class="rounded-xl max-h-40 max-w-full object-cover border border-border"
+                                alt="Comment preview" />
+
+                            <button
+                                type="button"
+                                (click)="clearCommentEditImage()"
+                                class="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-red-500 hover:underline cursor-pointer">
+
+                                <i class="fa-solid fa-xmark"></i>
+                                Remove image
+                            </button>
+
+                        </div>
+                    }
+
+                    <div class="flex items-center justify-between gap-2 flex-wrap pt-0.5">
+
+                        <label
+                            class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted hover:text-primary cursor-pointer">
+
+                            <i class="fa-solid fa-image"></i>
+
+                            <span>
+                                {{ editCommentImagePreview ? 'Change image' : 'Add image' }}
+                            </span>
+
+                            <input
+                                type="file"
+                                accept="image/*"
+                                (change)="onCommentEditImageSelected($event)"
+                                class="hidden" />
+
+                        </label>
+
+                        <div class="flex items-center gap-2 text-[11px] font-semibold">
+
+                            <button
+                                type="button"
+                                (click)="cancelEditComment()"
+                                class="px-2.5 py-1 rounded-lg text-muted hover:text-text cursor-pointer">
+                                Cancel
+                            </button>
+
+                            <button
+                                type="button"
+                                (click)="saveEditComment()"
+                                [disabled]="isSavingComment || (!editCommentContent.trim() && !editCommentImageFile)"
+                                class="px-3 py-1 rounded-lg bg-primary text-white disabled:opacity-50 cursor-pointer">
+                                {{ isSavingComment ? 'Saving...' : 'Save' }}
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+
+            } @else {
+
+                <p class="text-xs text-text leading-relaxed break-words">
+                    {{ commentData.content }}
+                </p>
+
+                @if (commentData.image) {
+
+                    <img
+                        [src]="commentData.image"
+                        class="mt-2 rounded-xl max-h-48 object-cover w-full border border-border"
+                        alt="Comment image" />
+
                 }
+            }
 
-            </button>
         </div>
-    </form>
+    </div>
 
-    <!-- Image Preview -->
-    @if (imagePreview) {
-        <div class="relative inline-block pl-11 max-w-full">
+    <!-- Comment Actions -->
+    <div class="flex items-center gap-4 pl-3 sm:pl-11 flex-wrap min-w-0 text-[11px] font-semibold text-muted">
 
-            <img
-                [src]="imagePreview"
-                class="rounded-xl max-h-32 max-w-full object-cover border border-border"
-                alt="Selected attachment" />
+        <button
+            type="button"
+            (click)="toggleLike()"
+            class="hover:text-primary transition-colors cursor-pointer"
+            [class.text-primary]="isLiked">
+
+            Like ({{ likesCount }})
+
+        </button>
+
+        <button
+            type="button"
+            (click)="showReplyForm = !showReplyForm"
+            class="hover:text-primary transition-colors cursor-pointer">
+
+            Reply
+
+        </button>
+
+        @if (totalRepliesCount > 0 || replies.length > 0) {
 
             <button
                 type="button"
-                (click)="clearImage()"
-                class="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-red-500 hover:underline cursor-pointer">
+                (click)="toggleReplies()"
+                class="hover:text-primary transition-colors cursor-pointer text-primary">
 
-                <i class="fa-solid fa-xmark"></i>
-                Remove image
+                {{ showReplies ? 'Hide replies' : 'View replies (' + totalRepliesCount + ')' }}
+
             </button>
+        }
+
+        @if (isMyComment) {
+
+            <div class="flex items-center gap-3 ml-auto">
+
+                <span
+                    (click)="startEditComment()"
+                    class="hover:text-primary transition-colors cursor-pointer inline-flex items-center gap-1">
+
+                    <i class="fa-solid fa-pen text-[10px]"></i>
+                    Edit
+
+                </span>
+
+                <button
+                    type="button"
+                    (click)="deleteComment()"
+                    class="hover:text-red-500 transition-colors cursor-pointer">
+
+                    Delete
+
+                </button>
+
+            </div>
+        }
+
+    </div>
+
+    <!-- Reply Form -->
+    @if (showReplyForm) {
+
+        <div class="pl-3 sm:pl-11 pt-1.5 pb-1.5 w-full min-w-0 max-w-full">
+
+            <app-comment-form
+                [postId]="postId"
+                [parentCommentId]="commentData._id || commentData.id"
+                [isReply]="true"
+                [postData]="postData"
+                (commentCreated)="onReplyAdded($event)">
+            </app-comment-form>
+
+        </div>
+    }
+
+    <!-- Replies List -->
+    @if (showReplies && replies.length > 0) {
+
+        <div class="pl-3 sm:pl-10 space-y-4 border-l-2 border-border/60 ml-2 sm:ml-4 mt-2.5 mb-2 min-w-0">
+
+            @for (reply of replies; track reply._id || reply.id) {
+
+                <div class="space-y-1.5 min-w-0">
+
+                    <!-- Reply Content -->
+                    <div class="flex items-start gap-2.5 min-w-0">
+
+                        <img
+                            [src]="reply.commentCreator.photo || '/assets/sociafy-default-profile-avatar.png'"
+                            class="w-7 h-7 rounded-full object-cover mt-0.5 shrink-0 border border-border"
+                            [alt]="reply.commentCreator.name" />
+
+                        <div class="bg-background border border-border/70 p-3 rounded-2xl flex-1 min-w-0 space-y-1">
+
+                            <div class="flex items-center justify-between gap-2 min-w-0">
+
+                                <span class="font-bold text-xs text-text truncate">
+                                    {{ reply.commentCreator.name }}
+                                </span>
+
+                                <span class="text-[10px] text-muted shrink-0">
+                                    {{ reply.createdAt | date:'short' }}
+                                </span>
+
+                            </div>
+
+                            <!-- Edit Reply -->
+                            @if (editingReplyId === (reply._id || reply.id)) {
+
+                                <div class="space-y-2 pt-1">
+
+                                    <input
+                                        type="text"
+                                        [(ngModel)]="editReplyContent"
+                                        name="editReplyContent-{{ reply._id || reply.id }}"
+                                        placeholder="Edit reply text..."
+                                        class="w-full min-w-0 bg-white border border-border rounded-xl px-3 py-1.5 text-xs text-text focus:outline-none focus:border-primary transition-colors" />
+
+                                    @if (editReplyImagePreview) {
+
+                                        <div class="relative inline-block max-w-full">
+
+                                            <img
+                                                [src]="editReplyImagePreview"
+                                                class="rounded-xl max-h-36 max-w-full object-cover border border-border"
+                                                alt="Reply preview" />
+
+                                            <button
+                                                type="button"
+                                                (click)="clearReplyEditImage()"
+                                                class="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-red-500 hover:underline cursor-pointer">
+
+                                                <i class="fa-solid fa-xmark"></i>
+                                                Remove image
+
+                                            </button>
+
+                                        </div>
+                                    }
+
+                                    <div class="flex items-center justify-between gap-2 flex-wrap pt-0.5">
+
+                                        <label
+                                            class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted hover:text-primary cursor-pointer">
+
+                                            <i class="fa-solid fa-image"></i>
+
+                                            <span>
+                                                {{ editReplyImagePreview ? 'Change image' : 'Add image' }}
+                                            </span>
+
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                (change)="onReplyEditImageSelected($event)"
+                                                class="hidden" />
+
+                                        </label>
+
+                                        <div class="flex items-center gap-2 text-[11px] font-semibold">
+
+                                            <button
+                                                type="button"
+                                                (click)="cancelEditReply()"
+                                                class="px-2.5 py-1 rounded-lg text-muted hover:text-text cursor-pointer">
+                                                Cancel
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                (click)="saveEditReply(reply)"
+                                                [disabled]="isSavingReply || (!editReplyContent.trim() && !editReplyImageFile)"
+                                                class="px-3 py-1 rounded-lg bg-primary text-white disabled:opacity-50 cursor-pointer">
+                                                {{ isSavingReply ? 'Saving...' : 'Save' }}
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            } @else {
+
+                                <p class="text-xs text-text leading-relaxed break-words">
+                                    {{ reply.content }}
+                                </p>
+
+                                @if (reply.image) {
+
+                                    <img
+                                        [src]="reply.image"
+                                        class="mt-2 rounded-xl max-h-40 object-cover w-full border border-border"
+                                        alt="Reply image" />
+
+                                }
+                            }
+
+                        </div>
+                    </div>
+
+                    <!-- Reply Actions -->
+                    <div class="flex items-center gap-4 pl-3 sm:pl-9 flex-wrap min-w-0 text-[11px] font-semibold text-muted">
+
+                        <button
+                            type="button"
+                            (click)="toggleReplyLike(reply)"
+                            class="hover:text-primary transition-colors cursor-pointer"
+                            [class.text-primary]="reply.isLiked">
+
+                            Like ({{ getReplyLikesCount(reply) }})
+
+                        </button>
+
+                        <button
+                            type="button"
+                            (click)="openReplyTo(reply)"
+                            class="hover:text-primary transition-colors cursor-pointer">
+
+                            Reply
+
+                        </button>
+
+                        @if (isMyReply(reply)) {
+
+                            <div class="flex items-center gap-3 ml-auto">
+
+                                <span
+                                    (click)="startEditReply(reply)"
+                                    class="hover:text-primary transition-colors cursor-pointer inline-flex items-center gap-1">
+
+                                    <i class="fa-solid fa-pen text-[10px]"></i>
+                                    Edit
+
+                                </span>
+
+                                <button
+                                    type="button"
+                                    (click)="deleteReply(reply)"
+                                    class="hover:text-red-500 transition-colors cursor-pointer">
+
+                                    Delete
+
+                                </button>
+
+                            </div>
+                        }
+
+                    </div>
+
+                    <!-- Nested Reply Form -->
+                    @if (showReplyForm && replyingToId === (reply._id || reply.id)) {
+
+                        <div class="pl-3 sm:pl-9 pt-1.5 pb-1.5 w-full min-w-0 max-w-full">
+
+                            <app-comment-form
+                                [postId]="postId"
+                                [parentCommentId]="commentData._id || commentData.id"
+                                [isReply]="true"
+                                [postData]="postData"
+                                (commentCreated)="onReplyAdded($event)">
+                            </app-comment-form>
+
+                        </div>
+                    }
+
+                </div>
+            }
+
         </div>
     }
 
