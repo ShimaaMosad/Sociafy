@@ -1,13 +1,13 @@
 import { Component, Input, OnInit, inject, output, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
 import { CurrentUserService } from '../../../../core/services/current-user.service';
 import { CommentsService } from '../../services/comments.service';
 import { ActivityService } from '../../../posts/services/activity.service';
 import { CommentItem } from '../../models/comments.interface';
 import { PostItem } from '../../../posts/models/posts.interface';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-comment-item',
@@ -22,6 +22,7 @@ export class CommentItemComponent implements OnInit {
   private activityService = inject(ActivityService);
   private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
+
   @Input({ required: true }) commentData!: CommentItem;
   @Input({ required: true }) postId!: string;
   @Input() postData: PostItem | null = null;
@@ -112,8 +113,23 @@ export class CommentItemComponent implements OnInit {
 
   private getCreatorId(item: any): string {
     if (!item || typeof item !== 'object') return '';
-    const creator = item?.commentCreator || item?.user || item?.author || item?.createdBy;
+    const creator =
+      item?.commentCreator || item?.user || item?.author || item?.createdBy || item?.replyCreator;
     return this.extractId(creator);
+  }
+
+  private extractPhoto(obj: any): string {
+    if (!obj || typeof obj !== 'object') return '';
+    const raw =
+      obj?.photo ||
+      obj?.avatar ||
+      obj?.profileImage ||
+      obj?.profilePhoto ||
+      obj?.image ||
+      obj?.user?.photo ||
+      obj?.user?.avatar ||
+      '';
+    return typeof raw === 'string' && raw.trim() ? raw.trim() : '';
   }
 
   private emitRepliesCount(): void {
@@ -149,17 +165,36 @@ export class CommentItemComponent implements OnInit {
       this.commentsService.saveLikedCommentId(rid, true, this.currentUserId, this.postId);
     }
 
-    const creator = reply?.commentCreator || reply?.user || reply?.author || {};
+    const rawCreator =
+      reply?.commentCreator || reply?.user || reply?.author || reply?.createdBy || {};
+    const creatorId =
+      this.extractId(rawCreator) ||
+      (typeof reply?.commentCreator === 'string' ? reply.commentCreator : '') ||
+      this.currentUserId;
+
+    const isSelf = Boolean(this.currentUserId && creatorId && creatorId === this.currentUserId);
+    const name =
+      rawCreator?.name ||
+      rawCreator?.username ||
+      (isSelf ? this.currentUser?.name || this.currentUser?.username : '') ||
+      'User';
+
+    const photo =
+      this.extractPhoto(rawCreator) ||
+      this.extractPhoto(reply) ||
+      (isSelf ? this.extractPhoto(this.currentUser) : '') ||
+      '/assets/sociafy-default-profile-avatar.png';
 
     return {
       ...reply,
       _id: rid,
       id: rid,
       commentCreator: {
-        ...creator,
-        _id: this.extractId(creator),
-        name: creator?.name || 'User',
-        photo: creator?.photo || '',
+        ...(typeof rawCreator === 'object' ? rawCreator : {}),
+        _id: creatorId,
+        id: creatorId,
+        name,
+        photo,
       },
       likes: likesArr,
       likesCount: typeof reply?.likesCount === 'number' ? reply.likesCount : likesArr.length,
@@ -417,8 +452,10 @@ export class CommentItemComponent implements OnInit {
     }
   }
 
-  onReplyAdded(newReply: CommentItem): void {
-    const formattedReply = this.normalizeReply(newReply);
+  onReplyAdded(newReply: any): void {
+    const rawReply =
+      newReply?.data?.reply || newReply?.data?.comment || newReply?.reply || newReply;
+    const formattedReply = this.normalizeReply(rawReply);
 
     this.replies.push(formattedReply);
     this.repliesLoaded = true;
@@ -525,42 +562,68 @@ export class CommentItemComponent implements OnInit {
   }
 
   getCreator(item: any): any {
-    return (
+    const creator =
       item?.commentCreator ||
       item?.user ||
       item?.author ||
       item?.createdBy ||
       item?.replyCreator ||
-      null
-    );
+      null;
+    const id = this.extractId(creator) || this.currentUserId;
+    const isSelf = Boolean(this.currentUserId && id === this.currentUserId);
+    return {
+      ...(typeof creator === 'object' && creator ? creator : {}),
+      _id: id,
+      id,
+      name: creator?.name || creator?.username || (isSelf ? this.currentUser?.name : 'User'),
+      photo: this.getCreatorPhoto(item),
+    };
   }
 
   getCreatorName(item: any): string {
-    const creator = this.getCreator(item);
-    return creator?.name || creator?.username || 'Unknown User';
+    const creator =
+      item?.commentCreator ||
+      item?.user ||
+      item?.author ||
+      item?.createdBy ||
+      item?.replyCreator ||
+      null;
+    if (creator?.name) return creator.name;
+    if (creator?.username) return creator.username;
+    const id = this.extractId(creator);
+    if (this.currentUserId && id === this.currentUserId && this.currentUser?.name) {
+      return this.currentUser.name;
+    }
+    return 'User';
   }
 
   getCreatorPhoto(item: any): string {
-    const creator = this.getCreator(item);
-    const photo = creator?.photo || creator?.avatar || creator?.profileImage || '';
-    return photo && String(photo).trim()
-      ? String(photo)
-      : '/assets/sociafy-default-profile-avatar.png';
+    const creator =
+      item?.commentCreator ||
+      item?.user ||
+      item?.author ||
+      item?.createdBy ||
+      item?.replyCreator ||
+      null;
+    const id = this.extractId(creator);
+    const isSelf = Boolean(this.currentUserId && id === this.currentUserId);
+
+    const foundPhoto =
+      this.extractPhoto(creator) || (isSelf ? this.extractPhoto(this.currentUser) : '') || '';
+
+    return foundPhoto || '/assets/sociafy-default-profile-avatar.png';
   }
 
   goToUserProfile(creator: any): void {
     const targetId = String(creator?._id || creator?.id || creator?.userId || '').trim();
     if (!targetId) return;
 
-    const currentUser = this.currentUserService.getCurrentUser();
-    const currentId = String((currentUser as any)?._id || (currentUser as any)?.id || '').trim();
-
+    const currentId = String(this.currentUserId || '').trim();
     if (currentId && targetId === currentId) {
       this.router.navigate(['/profile']);
       return;
     }
 
-    // عدّلي '/user-profile' لو اسم الـ route عندك في app.routes.ts مختلف مثل '/profile'
     this.router.navigate(['/user-profile', targetId]);
   }
 }

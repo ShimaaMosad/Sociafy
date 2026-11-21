@@ -1,30 +1,34 @@
-<div class="space-y-2 pt-1 min-w-0 max-w-full">
-    <form (ngSubmit)="submitComment()" class="flex items-center gap-2 min-w-0 max-w-full">
-        <label
-            class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-surface hover:bg-border/60 border border-border flex items-center justify-center text-muted hover:text-primary transition-colors cursor-pointer shrink-0"
-            title="Attach image">
-            <i class="fa-solid fa-image text-xs"></i>
-            <input type="file" accept="image/*" (change)="onImageSelected($event)" class="hidden" />
-        </label>
-
-        <div class="relative flex-1 min-w-0">
+<div class="space-y-2 pt-1 w-full min-w-0 max-w-full">
+    <form (ngSubmit)="submitComment()"
+        class="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full min-w-0 max-w-full">
+        <div class="relative w-full sm:flex-1 min-w-0">
             <input type="text" [(ngModel)]="content" name="content"
                 [placeholder]="isReply ? 'Write a reply...' : 'Write a thoughtful comment...'"
-                class="w-full min-w-0 bg-surface border border-border rounded-xl pl-3 sm:pl-4 pr-10 py-2 sm:py-2.5 text-xs text-text placeholder:text-muted focus:outline-none focus:border-primary transition-colors" />
+                class="w-full min-w-0 bg-surface border border-border rounded-xl px-3.5 py-2 sm:py-2.5 text-xs text-text placeholder:text-muted focus:outline-none focus:border-primary transition-colors" />
+        </div>
+
+        <div class="flex items-center justify-end gap-2 w-full sm:w-auto shrink-0">
+            <label
+                class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-surface hover:bg-border/60 border border-border flex items-center justify-center text-muted hover:text-primary transition-colors cursor-pointer shrink-0"
+                title="Attach image">
+                <i class="fa-solid fa-image text-xs"></i>
+                <input type="file" accept="image/*" (change)="onImageSelected($event)" class="hidden" />
+            </label>
 
             <button type="submit" [disabled]="isSubmitting || (!content.trim() && !selectedImage)"
-                class="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white rounded-lg flex items-center justify-center transition-colors cursor-pointer">
+                class="px-3.5 h-8 sm:h-9 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0">
                 @if (isSubmitting) {
                 <i class="fa-solid fa-spinner fa-spin text-[10px]"></i>
                 } @else {
                 <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                <span>{{ isReply ? 'Reply' : 'Post' }}</span>
                 }
             </button>
         </div>
     </form>
 
     @if (imagePreview) {
-    <div class="relative inline-block pl-2 sm:pl-11 max-w-full">
+    <div class="relative inline-block max-w-full">
         <img [src]="imagePreview" class="rounded-xl max-h-32 max-w-full object-cover border border-border"
             alt="Selected attachment" />
         <button type="button" (click)="clearImage()"
