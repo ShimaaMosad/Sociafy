@@ -7,6 +7,7 @@ import { CommentsService } from '../../services/comments.service';
 import { ActivityService } from '../../../posts/services/activity.service';
 import { CommentItem } from '../../models/comments.interface';
 import { PostItem } from '../../../posts/models/posts.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-comment-item',
@@ -20,7 +21,7 @@ export class CommentItemComponent implements OnInit {
   private currentUserService = inject(CurrentUserService);
   private activityService = inject(ActivityService);
   private cdr = inject(ChangeDetectorRef);
-
+  private router = inject(Router);
   @Input({ required: true }) commentData!: CommentItem;
   @Input({ required: true }) postId!: string;
   @Input() postData: PostItem | null = null;
@@ -98,8 +99,7 @@ export class CommentItemComponent implements OnInit {
         const found = parsed?.data?.user || parsed?.user || parsed;
         if (found?._id || found?.id) return found;
       }
-    } catch {
-    }
+    } catch {}
 
     return null;
   }
@@ -522,5 +522,45 @@ export class CommentItemComponent implements OnInit {
         error: (err) => console.error('Error deleting comment:', err),
       });
     }
+  }
+
+  getCreator(item: any): any {
+    return (
+      item?.commentCreator ||
+      item?.user ||
+      item?.author ||
+      item?.createdBy ||
+      item?.replyCreator ||
+      null
+    );
+  }
+
+  getCreatorName(item: any): string {
+    const creator = this.getCreator(item);
+    return creator?.name || creator?.username || 'Unknown User';
+  }
+
+  getCreatorPhoto(item: any): string {
+    const creator = this.getCreator(item);
+    const photo = creator?.photo || creator?.avatar || creator?.profileImage || '';
+    return photo && String(photo).trim()
+      ? String(photo)
+      : '/assets/sociafy-default-profile-avatar.png';
+  }
+
+  goToUserProfile(creator: any): void {
+    const targetId = String(creator?._id || creator?.id || creator?.userId || '').trim();
+    if (!targetId) return;
+
+    const currentUser = this.currentUserService.getCurrentUser();
+    const currentId = String((currentUser as any)?._id || (currentUser as any)?.id || '').trim();
+
+    if (currentId && targetId === currentId) {
+      this.router.navigate(['/profile']);
+      return;
+    }
+
+    // عدّلي '/user-profile' لو اسم الـ route عندك في app.routes.ts مختلف مثل '/profile'
+    this.router.navigate(['/user-profile', targetId]);
   }
 }
